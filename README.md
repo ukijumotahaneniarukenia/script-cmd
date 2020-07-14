@@ -2,9 +2,9 @@
 ホームコマンド
 
 - シンボリックリンク作成
-
+  - よさげやったら、|bash
 ```
-find $HOME/script-cmd -type f | grep -vP '\.git' | xargs file | grep executable | cut -d':' -f1 | while read f;do echo ln -fsr $f $HOME/.local/script-cmd/bin/${f##*/};done
+find $HOME/script-cmd -type f | grep -vP '\.git' | xargs file | grep executable | cut -d':' -f1 | while read f;do CMD_HOST_VERSION=$(echo $f|grep -Po '[0-9]+?(-[0-9]+)+');echo ln -fsr $f $HOME/.local/script-cmd/bin/${f##*/};echo ln -fsr $f $HOME/.local/script-cmd/bin/${f##*/}-$CMD_HOST_VERSION;done
 ```
 
 - パス通す
