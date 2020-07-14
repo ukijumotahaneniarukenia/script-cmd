@@ -38,4 +38,4 @@ if [ -z "$SEARCH_WORD" ];then
 
 fi
 
-time perl -MUnicode::UCD -C -E '$,="\t";($s,$e)=@ARGV;map{$n=$_;$c=sprintf("0x%X",$_);$a=Unicode::UCD::charinfo(sprintf("0x%X",$_));map {say $n,$c,chr($n),$_,%{$a}{$_}} sort keys %{$a} if(($_<55296 or $_>57343) and $_>190)}($s..$e);' 0 1114109 | grep "${SEARCH_WORD}"
+time perl -MUnicode::UCD -C -E '$,="\t";($s,$e)=@ARGV;map{$n=$_;$c=sprintf("0x%X",$_);$a=Unicode::UCD::charinfo(sprintf("0x%X",$_));map {say $n,$c,chr($n),$_,%{$a}{$_}} sort keys %{$a} if(($_<55296 or $_>57343) and $_>190)}($s..$e);' 0 1114112 | grep "${SEARCH_WORD}"
