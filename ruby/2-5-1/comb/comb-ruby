@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+   IN: $0 2 ジーナ マルコ 紅の豚
+  OUT:
+EOS
+
+exit 0
+
+}
+
+NUM="$1";shift;
+LIST="$@";shift;
+
+if [ -z "$NUM" ];then
+
+  usage
+
+fi
+
+if [ -z "$LIST" ];then
+
+  usage
+
+fi
+
+echo "$NUM" "$LIST" | ruby -anle 'n=$F[0].to_i;m=$F[1..$F.size].size;a=$F[1..$F.size].combination(m < n ? m : n).to_a;a.map{|x| puts x.join("\t")}'
