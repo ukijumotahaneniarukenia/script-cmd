@@ -3,7 +3,7 @@
 usage(){
 cat <<EOS
 Usage:
-   IN: $0 {A..C}{A..C}
+   IN: $0 crosstab.tsv {A..C}{A..C}
   OUT:
        [['@@' 'AA' 'AB' 'AC' 'BA' 'BB' 'BC' 'CA' 'CB' 'CC']
         ['AA' '--' '--' '--' '--' '--' '--' '--' '--' '--']
@@ -22,7 +22,14 @@ exit 0
 
 }
 
+OUTPUT_FILE_NAME="$1";shift;
 PATTERN_LIST="$@";shift;
+
+if [ -z "$OUTPUT_FILE_NAME" ];then
+
+  usage
+
+fi
 
 if [ -z "$PATTERN_LIST" ];then
 
@@ -30,4 +37,5 @@ if [ -z "$PATTERN_LIST" ];then
 
 fi
 
-echo "${PATTERN_LIST}" | opy -m numpy 'B:{import os;import numpy as np;f="a.tsv";};{a=np.array([F[1:]]);b=np.zeros((len(a[0]),len(a[0])));c=np.concatenate([a,b],axis=0);d=np.array([["@"*len(F[1:][0]),*F[1:]]]).T};E:{e=np.concatenate([d,c],axis=1);r=np.where(e=="0.0","-"*len(F[1:][0]),e);print(r)};E:{np.savetxt(f, r, fmt="%s",delimiter="\t",encoding="utf-8")}'
+
+echo "$OUTPUT_FILE_NAME" "$PATTERN_LIST" | opy -m numpy 'B:{import os;import numpy as np;};{f=F1;a=np.array([F[2:]]);b=np.zeros((len(a[0]),len(a[0])));c=np.concatenate([a,b],axis=0);d=np.array([["@"*len(F[2:][0]),*F[2:]]]).T};E:{e=np.concatenate([d,c],axis=1);r=np.where(e=="0.0","-"*len(F[2:][0]),e);print(r)};E:{np.savetxt(f, r, fmt="%s",delimiter="\t",encoding="utf-8")}'
