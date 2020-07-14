@@ -20,3 +20,6 @@ echo 'export PATH=$SCRIPT_CMD_HOME/bin:$PATH'>>$HOME/.bashrc
 ```
 source $HOME/.bashrc
 ```
+
+
+- テスト実行時、使用しているバイナリコマンドが以前のテスト実施時と異なる場合は差異がでるので、原因は実行バイナリのバージョン違いであると特定できる
