@@ -45,4 +45,4 @@ if [ -z "$SCRIPT_NAME" ];then
 
 fi
 
-perl -C -MString::Random -MUnicode::UCD -E '$l;$a=Unicode::UCD::charscript(@ARGV);map{$l=$l+($e-$s+1);($s,$e,$k)=@{$_};$t=sprintf(qq/\\x{%X}-\\x{%X}/,$s,$e);push(@b,$t)} @{$a};END{say eval"String::Random->new->randregex("."\"[".(join "",@b)."]{".$l."}"."\")"}' $SCRIPT_NAME 2>/dev/null
+perl -C -MString::Random -MUnicode::UCD -E '$l;$a=Unicode::UCD::charscript(@ARGV);map{($s,$e,$k)=@{$_};$l=$l+($e-$s+1);$t=sprintf(qq/\\x{%X}-\\x{%X}/,$s,$e);push(@b,$t)} @{$a};END{say eval"String::Random->new->randregex("."\"[".(join "",@b)."]{".$l."}"."\")"}' $SCRIPT_NAME 2>/dev/null
