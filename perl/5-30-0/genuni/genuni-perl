@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+  SCRIPT_NAME_LIST:
+
+    A Adlam Ahom Anatolian_hieroglyphs Arabic Armenian Avestan
+    B Balinese Bamum Bassa_vah Batak Bengali Bhaiksuki Bopomofo Brahmi Braille Buginese Buhid
+    C Canadian_aboriginal Carian Caucasian_albanian Chakma Cham Cherokee Common Coptic Cuneiform Cypriot Cyrillic
+    D Deseret Devanagari Dogra Duployan
+    E Egyptian_hieroglyphs Elbasan Elymaic Ethiopic
+    G Georgian Glagolitic Gothic Grantha Greek Gujarati Gunjala_gondi Gurmukhi
+    H Han Hangul Hanifi_rohingya Hanunoo Hatran Hebrew Hiragana
+    I Imperial_aramaic Inherited Inscriptional_pahlavi Inscriptional_parthian
+    J Javanese
+    K Kaithi Kannada Katakana Kayah_li Kharoshthi Khmer Khojki Khudawadi
+    L Lao Latin Lepcha Limbu Linear_a Linear_b Lisu Lycian Lydian
+    M Mahajani Makasar Malayalam Mandaic Manichaean Marchen Masaram_gondi Medefaidrin Meetei_mayek Mende_kikakui Meroitic_cursive Meroitic_hieroglyphs Miao Modi Mongolian Mro Multani Myanmar
+    N Nabataean Nandinagari New_tai_lue Newa Nko Nushu Nyiakeng_puachue_hmong
+    O Ogham Ol_chiki Old_hungarian Old_italic Old_north_arabian Old_permic Old_persian Old_sogdian Old_south_arabian Old_turkic Oriya Osage Osmanya
+    P Pahawh_hmong Palmyrene Pau_cin_hau Phags_pa Phoenician Psalter_pahlavi
+    R Rejang Runic
+    S Samaritan Saurashtra Sharada Shavian Siddham SignWriting Sinhala Sogdian Sora_sompeng Soyombo Sundanese Syloti_nagri Syriac
+    T Tagalog Tagbanwa Tai_le Tai_tham Tai_viet Takri Tamil Tangut Telugu Thaana Thai Tibetan Tifinagh Tirhuta
+    U Ugaritic
+    V Vai
+    W Wancho Warang_citi
+    Y Yi
+    Z Zanabazar_square
+
+   IN: $0 Hiragana
+  OUT: じじゐいさをまべでつまがぁごげむゃぴぎくやぅやばゎれぉよゖめらぴらざれだほはべぃまてごかぼづろゎぐるょづはゅぽ🈀ぺはゞいぜたうゝぃげもぢゃけぱねきぞすげゆひでぜひがよぽ𛀁めばっよそけ
+EOS
+
+exit 0
+
+}
+
+SCRIPT_NAME="$1";shift;
+
+if [ -z "$SCRIPT_NAME" ];then
+
+  usage
+
+fi
+
+perl -C -MString::Random -MUnicode::UCD -E '$l;$a=Unicode::UCD::charscript(@ARGV);map{$l=$l+($e-$s+1);($s,$e,$k)=@{$_};$t=sprintf(qq/\\x{%X}-\\x{%X}/,$s,$e);push(@b,$t)} @{$a};END{say eval"String::Random->new->randregex("."\"[".(join "",@b)."]{".$l."}"."\")"}' $SCRIPT_NAME 2>/dev/null
