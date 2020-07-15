@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+  PRE: cpan String::Random
+   IN: $0 1 40 5 3
+  OUT:
+EOS
+
+exit 0
+
+}
+
+START_RN="$1";shift;
+END_RN="$1";shift;
+GRP="$1";shift;
+SUBGRP="$1";shift;
+
+if [ -z "$START_RN" ];then
+
+  usage
+
+fi
+
+if [ -z "$END_RN" ];then
+
+  usage
+
+fi
+
+if [ -z "$GRP" ];then
+
+  usage
+
+fi
+
+if [ -z "$SUBGRP" ];then
+
+  usage
+
+fi
+
+
+time perl -C -MString::Random -MTime::Piece -MPOSIX -E '($s,$e,$g,$sg)=@ARGV;map{$t=localtime->strftime("%s")-int(rand 1000000);$s=String::Random->new->randregex("[\x{3041}-\x{3096}\x{309D}-\x{309F}\x{1B001}-\x{1B001}\x{1F200}-\x{1F200}]{3}");printf qq/%012d %012d %012d %012d %d %s %s %d\n/,ceil($_/$g),$_%$g==0?$g:$_%$g,ceil(($_-((ceil($_/$g)-1)*$g))/$sg),($_%$g==0?$g:$_%$g)%$sg==0?$sg:($_%$g==0?$g:$_%$g)%$sg,int(rand 9)+1,localtime($t)->strftime("%Y-%m-%dT%H:%M:%S"),$s,$_}($s..$e)' $START_RN $END_RN $GRP $SUBGRP 2>/dev/null
