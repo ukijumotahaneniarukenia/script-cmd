@@ -1,6 +1,13 @@
 # script-cmd
 ホームコマンド
 
+- ディレクトリ作成
+
+```
+mkdir -p /home/aine/.local/script-cmd/bin
+```
+
+
 - シンボリックリンク作成
   - よさげやったら、|bash
 ```
