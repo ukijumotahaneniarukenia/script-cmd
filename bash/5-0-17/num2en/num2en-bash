@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+   IN: $0 19999
+  OUT: 1万9,999
+
+   or
+
+   IN: echo 99999 | $0
+  OUT: 9万9,999
+EOS
+
+exit 0
+
+}
+
+main(){
+  ARGS=($(cat -));
+
+  NUM=${ARGS[0]}
+
+  if [ -z $NUM ] ;then
+
+    usage
+
+  fi
+
+  #https://orebibou.com/ja/documents/shellgei/
+  echo "$NUM" | rev | sed -r -e's/[0-9]{4}/&,/g' -e's/,/'{万,億,兆,京,垓}'/1' -e's/0+([^0-9])/\1/g;s/([^0-9])([^0-9])/\2/g;s/[^0-9]$//g' -e's/([0-9]{3})([0-9])/\1,\2/g' | rev
+
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || echo -ne "$@" | main
