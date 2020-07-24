@@ -11,7 +11,7 @@ mkdir -p /home/aine/.local/script-cmd/bin
 - シンボリックリンク作成
   - よさげやったら、|bash
 ```
-find $HOME/script-cmd -type f | grep -vP '\.git|T0000' | xargs file | grep executable | cut -d':' -f1 | sort -r | while read f;do CMD_HOST_VERSION=$(echo $f|grep -Po '[0-9]+?(-[0-9]+)+');echo ln -fsr $f $HOME/.local/script-cmd/bin/${f##*/};echo ln -fsr $f $HOME/.local/script-cmd/bin/${f##*/}-$CMD_HOST_VERSION;done
+find $HOME/script-cmd -type f | grep -vP '\.git|T0000' | xargs file | grep -P 'executable|Ruby script' | cut -d':' -f1 | sort -r | while read f;do CMD_HOST_VERSION=$(echo $f|grep -Po '[0-9]+?(-[0-9]+)+');echo ln -fsr $f $HOME/.local/script-cmd/bin/${f##*/};echo ln -fsr $f $HOME/.local/script-cmd/bin/${f##*/}-$CMD_HOST_VERSION;done
 ```
 
 - パス通す
