@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+   IN: echo %E3%82%B8%E3%83%BC%E3%83%8A+%E3%83%9E%E3%83%AB%E3%82%B3+%E7%B4%85%E3%81%AE%E8%B1%9A | $0
+  OUT: ジーナ マルコ 紅の豚
+
+    or
+
+   IN: echo %E3%82%B8%E3%83%BC%E3%83%8A %E3%83%9E%E3%83%AB%E3%82%B3 %E7%B4%85%E3%81%AE%E8%B1%9A | xargs -n1 | $0
+  OUT: ジーナ
+       マルコ
+       紅の豚
+
+EOS
+
+exit 0
+
+}
+
+main(){
+  ARGS=($(cat -));
+
+  if [[ "${#ARGS[@]}" -eq 0 ]];then
+
+    usage
+
+  fi
+
+  for e in ${ARGS[@]};do
+
+    echo $e | ruby -rcgi -nle 'a={};a[$_]=CGI.unescape($_);puts a[$_]'
+
+  done
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || echo -ne "$@" | main

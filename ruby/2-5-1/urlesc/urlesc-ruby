@@ -3,20 +3,35 @@
 usage(){
 cat <<EOS
 Usage:
-   IN: $0 ジーナ マルコ 紅の豚
-  OUT: %E3%82%B8%E3%83%BC%E3%83%8A+%E3%83%9E%E3%83%AB%E3%82%B3+%E7%B4%85%E3%81%AE%E8%B1%9A
+   IN: echo うunんkoこ | $0
+  OUT: %E3%81%86un%E3%82%93ko%E3%81%93
+    or
+   IN: $0 うんこ ぶりぶり もんざえもん
+  OUT:
+       %E3%81%86%E3%82%93%E3%81%93
+       %E3%81%B6%E3%82%8A%E3%81%B6%E3%82%8A
+       %E3%82%82%E3%82%93%E3%81%96%E3%81%88%E3%82%82%E3%82%93
 EOS
 
 exit 0
 
 }
 
-LIST="$@";shift;
+main(){
+  ARGS=($(cat -));
 
-if [ -z "$LIST" ];then
+  if [[ "${#ARGS[@]}" -eq 0 ]];then
 
-  usage
+    usage
 
-fi
+  fi
 
-echo "$LIST" | ruby -rcgi -anle 'a={};a[$_]=CGI.escape($_);puts a[$_]'
+  for e in ${ARGS[@]};do
+
+    echo $e | teip -og '[^-a-zA-Z0-9@:%._\+~#=/]+' -- php -R 'echo urlencode($argn)."\n";'
+
+  done
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || echo -ne "$@" | main
