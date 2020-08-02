@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+   IN: echo うunんkoこ | $0
+  OUT: %E3%81%86un%E3%82%93ko%E3%81%93
+
+    or
+
+   IN: $0 うんこ ぶりぶり もんざえもん
+  OUT:
+       %E3%81%86%E3%82%93%E3%81%93
+       %E3%81%B6%E3%82%8A%E3%81%B6%E3%82%8A
+       %E3%82%82%E3%82%93%E3%81%96%E3%81%88%E3%82%82%E3%82%93
+
+EOS
+
+exit 0
+
+}
+
+main(){
+  ARGS=($(cat -));
+
+  if [[ "${#ARGS[@]}" -eq 0 ]];then
+
+    usage
+
+  fi
+
+  for e in ${ARGS[@]};do
+
+    echo $e | teip -og '[^-a-zA-Z0-9@:%._\+~#=/]+' -- php -R 'echo urlencode($argn)."\n";'
+
+  done
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || echo -ne "$@" | main
