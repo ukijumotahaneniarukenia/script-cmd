@@ -28,7 +28,7 @@ main(){
 
   for e in ${ARGS[@]};do
 
-    echo $e | teip -og '[^-a-zA-Z0-9@:%._\+~#=/]+' -- php -R 'echo urlencode($argn)."\n";'
+    echo $e | ruby -rcgi -nle 'a={};a[$_]=CGI.escape($_);puts a[$_]'
 
   done
 }
