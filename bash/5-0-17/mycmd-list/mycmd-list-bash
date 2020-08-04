@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+EXCLUDE_LIST="\.git|P00-|T01-|sh$"
+
+find $HOME/script-search $HOME/script-cmd -type f | grep -vP "$EXCLUDE_LIST" | xargs file | grep executable| cut -d':' -f1 | sort -r | while read f;do echo ${f##*/};done
