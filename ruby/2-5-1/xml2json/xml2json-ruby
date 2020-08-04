@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+
+def includeLibrary
+
+  require 'active_support'
+  require 'active_support/core_ext'
+  ActiveSupport::XmlMini.backend = 'Nokogiri'
+
+end
+
+def usage
+  f = File.basename(__FILE__)
+  puts <<~EOF
+Usage:
+  PRE: sudo gem install activesupport
+       sudo gem install nokogiri
+       sudo apt -y install ruby-dev
+
+  CMD : echo test.xml | #{f}
+EOF
+  return 0
+end
+
+def mock(ary)
+
+  includeLibrary
+
+  ary.map{|e|
+    txt=Hash.from_xml(File.read(e)).to_json
+    f=e.slice!(/.*(?=\.xml)/);
+    File.open(f+".json","w") do |file|
+      file.puts txt;
+    end
+  }
+  return 0
+end
+
+if ARGV.length > 0
+  usage
+elsif FileTest.pipe?(STDIN)
+  n = STDIN.readlines.map {|e|e.split(/\s{1,}/)}
+  pipe_args = n.flatten
+  mock(pipe_args)
+else
+  usage
+end
