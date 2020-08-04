@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+
+  CMD: ${0#./} '~' '\\\$HOME' target-file-remark-regexp somedir-full-path
+
+  CMD: ${0#./} M02-url-norm-list.txt M02-url-query-string-list.txt 'sh$|md$'
+
+  CMD: ${0#./} M02-url-norm-list.txt M02-url-query-string-list.txt 'sh$|md$' $HOME/script-repo
+
+EOS
+exit 0
+}
+
+IS_AS=$1;shift;
+TO_BE=$1;shift;
+TARGET_REGEXP=$1;shift;
+TARGET_DIR=$1;shift;
+
+DEFAULT_TARGET_REGEXP="sh$"
+DEFAULT_TARGET_DIR=$(pwd)
+
+[ -z "$IS_AS" ] && usage
+[ -z "$TO_BE" ] && usage
+[ -n "$TARGET_DIR" ] && DEFAULT_TARGET_DIR=${TARGET_DIR}
+[ -n "$DEFAULT_TARGET_REGEXP" ] && DEFAULT_TARGET_REGEXP=${TARGET_REGEXP}
+
+[ -d $DEFAULT_TARGET_DIR ] || usage
+
+while read file;do
+
+  printf "%s\t%s\t%s\n" $(grep -c -P "$IS_AS" $file) $file "sed -i 's;$IS_AS;$TO_BE;g' $file" | grep -vP "^0|${0#./}"
+
+done < <(find $DEFAULT_TARGET_DIR -type f | grep -P ${TARGET_REGEXP:-${DEFAULT_TARGET_REGEXP}})
