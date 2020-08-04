@@ -35,8 +35,5 @@ source $HOME/.bashrc
 - ファイル修正
   - フルパス取れる便利
 ```
-$ readlink -f search-com-effectiveperlprogramming-www
-/home/aine/script-search/com_effectiveperlprogramming_www/search-com-effectiveperlprogramming-www
-
-$ vi $(readlink -f search-com-effectiveperlprogramming-www)
+$ vi $(which search-com-effectiveperlprogramming-www)
 ```
