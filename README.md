@@ -30,3 +30,10 @@ source $HOME/.bashrc
 
 
 - テスト実行時、使用しているバイナリコマンドが以前のテスト実施時と異なる場合は差異がでるので、原因は実行バイナリのバージョン違いであると特定できる
+
+
+- ファイル修正
+  - フルパス取れる便利
+```
+$ vi $(which search-com-effectiveperlprogramming-www)
+```
