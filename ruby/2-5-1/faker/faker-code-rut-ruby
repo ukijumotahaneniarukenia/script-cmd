@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 #https://github.com/faker-ruby/faker
+#https://github.com/faker-ruby/faker/blob/master/License.txt
 require 'faker'
 
 def usage
