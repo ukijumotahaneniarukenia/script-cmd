@@ -44,3 +44,8 @@ cat L01-non-variable-arguments-file-name-list.txt | sed 's/$/-ruby/' | xargs -I@
 
 #置換
 paste L01-non-variable-arguments-file-name-list.txt L02-non-variable-arguments-method-name-list.txt | while read f p;do sed -i "s/TOBE_REPLACE/$p/" $f-ruby;done
+
+
+
+#自作コマンドに登録
+find $HOME/script-cmd -type f | grep -vP '\.git|[TML]([0-9][0-9])' | xargs file | grep -P 'executable|Ruby script'| cut -d':' -f1 | sort -r | while read f;do echo ln -fsr $f $HOME/.local/script-search/bin/${f##*/};done | bash
