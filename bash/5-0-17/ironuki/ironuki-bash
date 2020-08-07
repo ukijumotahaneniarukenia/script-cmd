@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+   IN: trans -h | ${0##.*/}
+  OUT:
+EOS
+
+exit 0
+
+}
+
+main(){
+  cat - | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,3})?)?[m|K]//g"
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || echo -ne "$@" | main
