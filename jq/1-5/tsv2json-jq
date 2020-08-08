@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+   IN: $0 test.tsv test.json
+  OUT:
+EOS
+
+exit 0
+
+}
+
+INPUT_FILE_NAME="$1";shift;
+OUTPUT_FILE_NAME="$1";shift;
+
+INPUT_FILE_EXTENSION=$(echo $INPUT_FILE_NAME | ruby -F'\.' -anle 'puts $F[$F.size-1]')
+OUTPUT_FILE_EXTENSION=$(echo $OUTPUT_FILE_NAME | ruby -F'\.' -anle 'puts $F[$F.size-1]')
+
+if [ ! $INPUT_FILE_EXTENSION == "tsv" ];then
+
+  usage
+
+fi
+
+if [ ! $OUTPUT_FILE_EXTENSION == "json" ];then
+
+  usage
+
+fi
+
+if [ ! -f "$INPUT_FILE_NAME" ];then
+
+  usage
+
+fi
+
+if [ -z "$OUTPUT_FILE_NAME" ];then
+
+  usage
+
+fi
+
+jq -s -R 'split("\n")|map(.|select(.!=""))|map(split("\t")) as $a|($a|length) as $row|($a[0]|length) as $col|[range(0;$row)]|map(. as $rn|[range(0;$col)]|map({("col"+tostring):$a[$rn][.]})|reduce .[] as $item({};.+$item))' $INPUT_FILE_NAME >$OUTPUT_FILE_NAME
