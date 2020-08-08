@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
 INCLUDE_LIST="executable|Ruby script"
-EXCLUDE_LIST="\.git|([P|T|L|M][0-9])"
+EXCLUDE_LIST="\.git|P00-|T01-|sh$"
 
 SCRIPT_CMD_DIR_NAME=script-cmd
+INSTALL_DIR_NAME=$HOME/.local/$SCRIPT_CMD_DIR_NAME/bin
 
 usage(){
 cat <<EOS
 Usage:
-   PRE: git clone https://github.com/ukijumotahaneniarukenia/$SCRIPT_CMD_DIR_NAME.git
-   CMD: bash $0 | bash
+   PRE: cd $HOME && rm -rf $SCRIPT_CMD_DIR_NAME && git clone https://github.com/ukijumotahaneniarukenia/$SCRIPT_CMD_DIR_NAME.git && mkdir -p $INSTALL_DIR_NAME
+   CMD: ${0##*/}
 EOS
 
 exit 0
@@ -22,9 +23,17 @@ if [ ! -d $HOME/$SCRIPT_CMD_DIR_NAME ];then
 
 fi
 
+if [ ! -d $INSTALL_DIR_NAME ];then
+
+  usage
+
+fi
+
 find $HOME/$SCRIPT_CMD_DIR_NAME -type f | grep -vP "$EXCLUDE_LIST" | xargs file | grep -P "$INCLUDE_LIST" | cut -d':' -f1 | sort -r | \
   while read f;do
-    CMD_HOST_VERSION=$(echo $f|grep -Po '[0-9]+?(-[0-9]+)+');
-    echo ln -fsr $f $HOME/.local/$SCRIPT_CMD_DIR_NAME/bin/${f##*/};
-    echo ln -fsr $f $HOME/.local/$SCRIPT_CMD_DIR_NAME/bin/${f##*/}-$CMD_HOST_VERSION;
+    {
+      CMD_HOST_VERSION=$(echo $f|grep -Po '[0-9]+?(-[0-9]+)+');
+      echo ln -fsr $f $HOME/.local/$SCRIPT_CMD_DIR_NAME/bin/${f##*/};
+      echo ln -fsr $f $HOME/.local/$SCRIPT_CMD_DIR_NAME/bin/${f##*/}-$CMD_HOST_VERSION;
+    } | bash
   done
