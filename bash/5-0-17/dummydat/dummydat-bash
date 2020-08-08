@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+LOCALE:ar bg ca-CAT da-DK de de-AT de-CH ee en-AU en-CA en-GB en-IND en-MS en-NEP en-NG en-NZ en-PAK en-SG en-UG en-US en-ZA en-au-ocker es es-MX fi-FI fr fr-CA fr-CH he hy id it ja ko lv nb-NO nl pl pt pt-BR ru sk sv tr uk vi zh-CN zh-TW
+
+  PRE:$ cat test.txt
+      faker-address-zip-ruby
+      faker-name-name-ruby
+      faker-company-name-ruby
+      faker-job-position-ruby
+      faker-job-employment-type-ruby
+      faker-job-education-level-ruby
+
+  CMD: ${0##./} test.txt test.tsv ja 10
+EOS
+
+exit 0
+
+}
+
+INPUT_FILE_NAME="$1";shift;
+OUTPUT_FILE_NAME="$1";shift;
+LOCALE_NAME="$1";shift;
+ROW_CNT="$1";shift;
+
+INPUT_FILE_EXTENSION=$(echo $INPUT_FILE_NAME | ruby -F'\.' -anle 'puts $F[$F.size-1]')
+OUTPUT_FILE_EXTENSION=$(echo $OUTPUT_FILE_NAME | ruby -F'\.' -anle 'puts $F[$F.size-1]')
+
+if [ ! $INPUT_FILE_EXTENSION == "txt" ];then
+
+  usage
+
+fi
+
+if [ ! $OUTPUT_FILE_EXTENSION == "tsv" ];then
+
+  usage
+
+fi
+
+if [ ! -f "$INPUT_FILE_NAME" ];then
+
+  usage
+
+fi
+
+if [ -z "$OUTPUT_FILE_NAME" ];then
+
+  usage
+
+fi
+
+if [ -z "$LOCALE_NAME" ];then
+
+  usage
+
+fi
+
+if [ -z "$ROW_CNT" ];then
+
+  usage
+
+fi
+
+if [ "$ROW_CNT" -le 0 ];then
+
+  echo g
+  usage
+
+fi
+
+cat $INPUT_FILE_NAME | sed "s/$/ $LOCALE_NAME $ROW_CNT;/g" | xargs -n$[$(cat $INPUT_FILE_NAME|wc -l)*3] | sed 's/;/) <(/g;s/^/paste <(/;s/<($//' | bash >$OUTPUT_FILE_NAME
