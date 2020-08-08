@@ -3,7 +3,7 @@
 usage(){
 cat <<EOS
 Usage:
-   IN: $0 test.tsv test.json
+   IN: ${0##*/} test.tsv test.json
   OUT:
 EOS
 
