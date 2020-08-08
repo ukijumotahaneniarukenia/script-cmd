@@ -13,7 +13,7 @@ LOCALE:ar bg ca-CAT da-DK de de-AT de-CH ee en-AU en-CA en-GB en-IND en-MS en-NE
       faker-job-employment-type-ruby
       faker-job-education-level-ruby
 
-  CMD: ${0##./} test.txt test.tsv ja 10
+  CMD: ${0##*/} test.txt test.tsv ja 10
 EOS
 
 exit 0
