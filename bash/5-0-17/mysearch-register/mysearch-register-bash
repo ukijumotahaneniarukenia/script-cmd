@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+INCLUDE_LIST="executable|Ruby script"
+EXCLUDE_LIST="\.git|P00-|T01-|sh$"
+
+SCRIPT_SEARCH_DIR_NAME=script-search
+
+usage(){
+cat <<EOS
+Usage:
+   PRE: git clone https://github.com/ukijumotahaneniarukenia/$SCRIPT_SEARCH_DIR_NAME.git
+   CMD: bash $0 | bash
+EOS
+
+exit 0
+
+}
+
+if [ ! -d $HOME/$SCRIPT_SEARCH_DIR_NAME ];then
+
+  usage
+
+fi
+
+find $HOME/$SCRIPT_SEARCH_DIR_NAME -type f | grep -vP "$EXCLUDE_LIST" | xargs file | grep -P "$INCLUDE_LIST" | cut -d':' -f1 | sort -r | \
+  while read f;do
+    echo ln -fsr $f $HOME/.local/$SCRIPT_SEARCH_DIR_NAME/bin/${f##*/}
+  done
