@@ -41,4 +41,4 @@ if [ -z "$OUTPUT_FILE_NAME" ];then
 
 fi
 
-jq -s -R 'split("\n")|map(.|select(.!=""))|map(split("\t")) as $a|($a|length) as $row|($a[0]|length) as $col|[range(0;$row)]|map(. as $rn|[range(0;$col)]|map({("col"+("00000"+tostring)[-3:]):$a[$rn][.]})|reduce .[] as $item({};.+$item))' $INPUT_FILE_NAME >$OUTPUT_FILE_NAME
+jq -s -R 'split("\n")|map(.|select(.!=""))|map(split("\t")) as $a|($a|length) as $row|($a[0]|length) as $col|[range(0;$row)]|map(. as $rn|[range(0;$col)]|map({("col"+("00000"+(.+1|tostring))[-3:]):$a[$rn][.]})|reduce .[] as $item({};.+$item))' $INPUT_FILE_NAME >$OUTPUT_FILE_NAME
