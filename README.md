@@ -1,7 +1,9 @@
 # script-cmd
 
+golangの場合はリンクじゃなくてコピー
+
 ```
-$ find $HOME/script-cmd -type f -name "mysearch-register-bash" -o -name "mycmd-register-bash" | bash
+$ find $HOME/script-cmd -type f -name "mysearch-install-bash" -o -name "mycmd-install-bash" | bash
 ```
 
 Usageいけてないとき
