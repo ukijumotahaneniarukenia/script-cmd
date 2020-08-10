@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-INCLUDE_LIST="executable|Ruby script"
+INCLUDE_LIST="executable|Ruby script|shared object"
 EXCLUDE_LIST="\.git|P00-|T01-|sh$"
 
 SCRIPT_CMD_DIR_NAME=script-cmd
