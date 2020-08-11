@@ -5,23 +5,23 @@ cat <<EOS
 Usage:
   KEYWORD_LIST: bidi block category code combining comment decimal decomposition digit lower mirrored name numeric script title unicode10 upper
 
-   IN: $0 'CAT FACE'
+   IN: ${0##*/} 'CAT FACE'
 
   OUT:
 
-   IN: $0 FACE
+   IN: ${0##*/} FACE
 
   OUT:
 
-   IN: $0 block
+   IN: ${0##*/} block
 
   OUT:
 
-   IN: $0 script
+   IN: ${0##*/} script
 
   OUT:
 
-   IN: $0 name
+   IN: ${0##} name
 
   OUT:
 EOS

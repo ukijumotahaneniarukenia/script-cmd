@@ -14,7 +14,7 @@ Usage:
   Z Z Zl Zp Zs
 
 
-   IN: $0 Lu
+   IN: ${0##*/} Lu
   OUT:
 
 EOS

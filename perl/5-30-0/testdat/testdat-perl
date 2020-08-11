@@ -4,7 +4,7 @@ usage(){
 cat <<EOS
 Usage:
   PRE: cpan String::Random
-   IN: $0 1 40 5 3
+   IN: ${0##*/} 1 40 5 3
   OUT:
 EOS
 
