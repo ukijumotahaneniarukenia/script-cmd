@@ -28,10 +28,10 @@ Usage:
   W Warang Citi
   Y Yi Radicals,Yi Syllables,Yijing Hexagram Symbols
 
-   IN: $0 Armenian
+   IN: ${0##*/} Armenian
   OUT: ԴրՅՉՆՠ֍ի՗ճԻխՂ֎վԺՉծՌէՐ֎՘տՊ՘՗ԲթրՁԾէ՗էգ՟ԴւփժղՍԼփԹեղ՜ՌդզԴՎ԰ձգփՐԴիդսճս՗յցՄ՞կւԽծգ֊ժ֊ՅգԷՅվԽՎեռ֍կՉՄֈօյևս
 
-   IN: $0 'IPA Extensions'
+   IN: ${0##*/} 'IPA Extensions'
   OUT: ɵʣɣɟɜɸɳʡɥʃɲɔʖʑʤʖʝʊʉɟʋɫʧʐʒɜɷɥəɰʫʝɠʔʮʍʌʢʜɭɖɑʭɥɦʛɘɻɾɗʝʡʝʊʓɟɶɺɟʭʋɧɹɖɯʜɝʑɥɝɴɔʉʩʦɘɣʔɨʦʀʦɱʫɒʥɢɐɛɐɬɧʪɡʢɼ
 
 EOS
