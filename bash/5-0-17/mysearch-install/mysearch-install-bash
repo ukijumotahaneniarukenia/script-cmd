@@ -29,8 +29,6 @@ if [ ! -d $INSTALL_DIR_NAME ];then
 
 fi
 
-mkdir -p $INSTALL_DIR_NAME
-
 find $HOME/$SCRIPT_SEARCH_DIR_NAME -type f | grep -vP "$EXCLUDE_LIST" | xargs file | grep -P "$INCLUDE_LIST" | cut -d':' -f1 | sort -r | \
   while read f;do
     echo ln -fsr $f $HOME/.local/$SCRIPT_SEARCH_DIR_NAME/bin/${f##*/} | bash
