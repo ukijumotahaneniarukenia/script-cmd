@@ -29,6 +29,9 @@ if [ ! -d $INSTALL_DIR_NAME ];then
 
 fi
 
+
+mkdir -p $INSTALL_DIR_NAME
+
 find $HOME/$SCRIPT_CMD_DIR_NAME -type f | grep -vP "$EXCLUDE_LIST" | xargs file | grep -P "$INCLUDE_LIST" | cut -d':' -f1 | sort -r | \
   while read f;do
     {
