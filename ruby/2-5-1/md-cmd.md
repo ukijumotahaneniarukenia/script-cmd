@@ -39,4 +39,37 @@ UNKO_MORI_MORI Unko-Mori-Mori
 unko-mori-mori Unko-Mori-Mori
 
 cat cmd-in-out.tsv | while read cmd in out;do sed "s/INPUT_STR/$in/g;s/OUTPUT_STR/$out/g;" template.sh >$cmd/$cmd-ruby;done
+
+$ cat cmd-in-out.tsv  | awk '$0=$1' | xargs -I@ echo - [ ] @
+- [ ] downcamel2upcamel
+- [ ] downcamel2snake
+- [ ] downcamel2screamsnake
+- [ ] downcamel2kebab
+- [ ] downcamel2train
+- [ ] upcamel2downcamel
+- [ ] upcamel2snake
+- [ ] upcamel2screamsnake
+- [ ] upcamel2kebab
+- [ ] upcamel2train
+- [ ] snake2downcamel
+- [ ] snake2upcamel
+- [ ] snake2screamsnake
+- [ ] snake2kebab
+- [ ] snake2train
+- [ ] screamsnake2downcamel
+- [ ] screamsnake2upcamel
+- [ ] screamsnake2snake
+- [ ] screamsnake2kebab
+- [ ] screamsnake2train
+- [ ] kebab2downcamel
+- [ ] kebab2upcamel
+- [ ] kebab2snake
+- [ ] kebab2screamsnake
+- [ ] kebab2train
+- [ ] train2downcamel
+- [ ] train2upcamel
+- [ ] train2snake
+- [ ] train2screamsnake
+- [ ] train2kebab
+
 ```
