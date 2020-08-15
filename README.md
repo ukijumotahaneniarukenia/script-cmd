@@ -1,10 +1,19 @@
 # script-cmd
 
-golangの場合はリンクじゃなくてコピー
+golangやnimなどのコンパイル言語はリンクじゃなくてコピーなど
+
+インストール
 
 ```
 $ find $HOME/script-cmd -type f -name "mysearch-install-bash" -o -name "mycmd-install-bash" | bash
 ```
+
+アンインストール
+
+```
+$ find $HOME/script-cmd -type f -name "mysearch-uninstall-bash" -o -name "mycmd-uninstall-bash" | bash
+```
+
 
 Usageいけてないとき
 
