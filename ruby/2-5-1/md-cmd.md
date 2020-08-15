@@ -38,4 +38,5 @@ unko_mori_mori Unko-Mori-Mori
 UNKO_MORI_MORI Unko-Mori-Mori
 unko-mori-mori Unko-Mori-Mori
 
+cat cmd-in-out.tsv | while read cmd in out;do sed "s/INPUT_STR/$in/g;s/OUTPUT_STR/$out/g;" template.sh >$cmd/$cmd-ruby;done
 ```
