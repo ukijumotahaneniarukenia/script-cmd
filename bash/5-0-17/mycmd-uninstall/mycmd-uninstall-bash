@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 INCLUDE_LIST="executable|Ruby script|shared object"
-EXCLUDE_LIST="\.git|P00-|T01-|sh$"
+EXCLUDE_LIST="\.git|[A-Z][0-9]{2}"
 
 SCRIPT_CMD_DIR_NAME=script-cmd
 INSTALL_DIR_NAME=$HOME/.local/$SCRIPT_CMD_DIR_NAME/bin
