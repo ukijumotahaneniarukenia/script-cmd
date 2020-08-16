@@ -26,7 +26,7 @@ echo {downcamel,upcamel,snake,screamsnake,kebab,train} | ruby -anle 'puts *$F.pe
 
 置換
 ```
-cat cmd_name-in-out-cmd_str.tsv | while read cmd_name in out cmd_str;do sed "s/INPUT_STR/$in/g;s/OUTPUT_STR/$out/g;s/CMD_STR/$cmd_str/g;" template.sh;done>$cmd_name/$cmd_name-ruby;done
+cat cmd-in-out-cmd_str.tsv | while read cmd_name in out cmd_str;do sed "s/INPUT_STR/$in/g;s/OUTPUT_STR/$out/g;s/CMD_STR/$cmd_str/g;" template.sh>$cmd_name/$cmd_name-ruby;done
 ```
 
 チェックリスト作成
@@ -82,3 +82,5 @@ $ cat cmd_name-in-out-cmd_str.tsv | awk '{print $1}' | xargs -I@ grep -A1 -P ^@ 
 2回目以降
 
 パタンが増え次第上記のフローで自動生成
+
+cmd_name-in-out-cmd_str.txtは残っているので、リカバレル
