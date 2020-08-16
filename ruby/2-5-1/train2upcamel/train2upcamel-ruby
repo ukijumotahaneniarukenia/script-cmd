@@ -3,8 +3,8 @@
 usage(){
 cat <<EOS
 Usage:
-   IN: echo UnkoMoriMori | ${0##*/}
-  OUT: Unko-Mori-Mori
+   IN: echo Unko-Mori-Mori | ${0##*/}
+  OUT: UnkoMoriMori
 EOS
 
 exit 0
