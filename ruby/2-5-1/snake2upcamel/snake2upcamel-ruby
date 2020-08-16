@@ -22,7 +22,7 @@ main(){
 
   fi
 
-  echo "${STR}" | ruby -F_ -anle 'print $F.map(CMD_STR:capitalize).join("")'
+  echo "${STR}" | ruby -F_ -anle 'print $F.map(&:capitalize).join("")'
 
 }
 

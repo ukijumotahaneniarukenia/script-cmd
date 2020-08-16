@@ -22,7 +22,7 @@ main(){
 
   fi
 
-  echo "${STR}" | ruby -F- -anle 'print $F.map(CMD_STR:downcase).join("_")'
+  echo "${STR}" | ruby -F- -anle 'print $F.map(&:downcase).join("_")'
 
 }
 

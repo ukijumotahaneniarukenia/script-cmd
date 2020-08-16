@@ -22,7 +22,7 @@ main(){
 
   fi
 
-  echo "${STR}" | ruby -F'(?=[A-Z])' -anle 'print $F.map(CMD_STR:downcase).join("-")'
+  echo "${STR}" | ruby -F'(?=[A-Z])' -anle 'print $F.map(&:downcase).join("-")'
 
 }
 

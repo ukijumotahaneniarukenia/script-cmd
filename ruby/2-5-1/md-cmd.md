@@ -1,3 +1,9 @@
+作業ディレクトリ
+
+```
+cd $HOME/script-cmd/ruby/2-5-1
+```
+
 マスタ作成
 ```
 echo {downcamel,unkoMoriMori,upcamel,UnkoMoriMori,snake,unko_mori_mori,screamsnake,UNKO_MORI_MORI,kebab,unko-mori-mori,train,Unko-Mori-Mori} | xargs -n1 | xargs -n2 >master-list.txt
@@ -83,8 +89,17 @@ $ cat cmd_name-in-out-cmd_str.tsv | awk '{print $1,$2,$3}' OFS="\t" | while read
 $ cat cmd_name-in-out-cmd_str.tsv | awk '{print $1}' | xargs -I@ grep -A1 -P ^@ cmd_name-in-out-cmd_str.txt|awk '{a+=NR%2}{b[a]=b[a]"\t"$0};END{for(e in b)print e,b[e]}'|sed 's/ \t/\t/'|sort -nk1|awk -v FS="\t" '{print $2,$3,$4,$5}' OFS="\t" | sponge cmd_name-in-out-cmd_str.tsv
 ```
 
+後処理
+
+アンパサンドが事故るので、一括置換
+
+```
+ag CMD_STR -l | grep -vP 'md-cmd.md|template.sh' | xargs perl -i -pe 's/CMD_STR/\&/'
+```
+
 2回目以降
 
 パタンが増え次第上記のフローで自動生成
 
 cmd_name-in-out-cmd_str.txtは残っているので、リカバレル
+
