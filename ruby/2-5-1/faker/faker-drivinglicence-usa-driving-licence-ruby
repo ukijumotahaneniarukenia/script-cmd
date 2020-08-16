@@ -1,0 +1,74 @@
+#!/usr/bin/env ruby
+#https://github.com/faker-ruby/faker
+#こんなかんじなのだろうか
+#
+#https://github.com/faker-ruby/faker/blob/master/License.txt
+#Copyright (c) 2007-2019 Benjamin Curtis
+
+#Permission is hereby granted, free of charge, to any person obtaining
+#a copy of this software and associated documentation files (the
+#"Software"), to deal in the Software without restriction, including
+#without limitation the rights to use, copy, modify, merge, publish,
+#distribute, sublicense, and/or sell copies of the Software, and to
+#permit persons to whom the Software is furnished to do so, subject to
+#the following conditions:
+#
+#The above copyright notice and this permission notice shall be
+#included in all copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+#NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+#LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+#OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+#WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+def usage
+  f = File.basename(__FILE__)
+  puts <<~EOF
+Usage:
+
+LOCALE:ar bg ca-CAT da-DK de de-AT de-CH ee en-AU en-CA en-GB en-IND en-MS en-NEP en-NG en-NZ en-PAK en-SG en-UG en-US en-ZA en-au-ocker es es-MX fi-FI fr fr-CA fr-CH he hy id it ja ko lv nb-NO nl pl pt pt-BR ru sk sv tr uk vi zh-CN zh-TW
+
+  PRE: sudo gem install faker
+
+  IN : echo en-US 20 | #{f}
+  OUT:
+
+  or
+
+  IN : #{f} ja 20
+  OUT:
+EOF
+  exit 0
+end
+
+def generate(ary)
+
+  require 'faker'
+
+  Faker::Config.locale=ary[0]
+
+  [*1..ary[1].to_i].map do|e|
+    puts Faker::DrivingLicence.usa_driving_licence
+  end
+end
+
+if ARGV.length > 0
+  cmd_args = [ *ARGV ]
+
+  if cmd_args.size != 2
+    usage
+  end
+
+  generate(cmd_args)
+
+elsif FileTest.pipe?(STDIN)
+
+  pipe_args = STDIN.readlines.map{|e|e.split(/\s+/)}.flatten
+
+  generate(pipe_args)
+else
+  usage
+end
