@@ -1,6 +1,6 @@
-一覧作成
+マスタ作成
 ```
-echo {downcamel,unkoMoriMori,upcamel,UnkoMoriMori,snake,unko_mori_mori,screamsnake,UNKO_MORI_MORI,kebab,unko-mori-mori,train,Unko-Mori-Mori} | xargs -n1 | xargs -n2
+echo {downcamel,unkoMoriMori,upcamel,UnkoMoriMori,snake,unko_mori_mori,screamsnake,UNKO_MORI_MORI,kebab,unko-mori-mori,train,Unko-Mori-Mori} | xargs -n1 | xargs -n2 >master-list.txt
 ```
 
 ディレクトリ作成
@@ -8,7 +8,7 @@ echo {downcamel,unkoMoriMori,upcamel,UnkoMoriMori,snake,unko_mori_mori,screamsna
 echo {downcamel,upcamel,snake,screamsnake,kebab,train} | ruby -anle 'puts *$F.permutation(2)'|xargs -n2|tr ' ' '2'| xargs -I@ mkdir -p @
 ```
 
-テンプレートの配備
+テンプレート配備
 ```
 echo {downcamel,upcamel,snake,screamsnake,kebab,train} | ruby -anle 'puts *$F.permutation(2)'|xargs -n2|tr ' ' '2'| xargs -I@ echo cp template.sh @/ | bash
 ```
@@ -19,21 +19,21 @@ echo {downcamel,upcamel,snake,screamsnake,kebab,train} | ruby -anle 'puts *$F.pe
 echo {downcamel,upcamel,snake,screamsnake,kebab,train} | ruby -anle 'puts *$F.permutation(2)'|xargs -n2|tr ' ' '2'| xargs -I@ echo mv @/template.sh @/@-ruby | bash
 ```
 
-IN-OUTの作成
+テーブルの作成
 ```
-echo {downcamel,upcamel,snake,screamsnake,kebab,train} | ruby -anle 'puts *$F.permutation(2)'|xargs -n2|while read in out;do echo $in"2"$out;cat master-list.txt| grep ^$in|awk '$0=$2';cat master-list.txt| grep ^$out|awk '$0=$2';done |xargs -n3 | tr ' ' '\t'>cmd-in-out.tsv
-```
-
-
-Usageのメンテ
-```
-cat cmd-in-out.tsv | while read cmd in out;do sed "s/INPUT_STR/$in/g;s/OUTPUT_STR/$out/g;" template.sh >$cmd/$cmd-ruby;done
+echo {downcamel,upcamel,snake,screamsnake,kebab,train} | ruby -anle 'puts *$F.permutation(2)'|xargs -n2|while read in out;do echo $in"2"$out;cat master-list.txt| grep ^$in|awk '$0=$2';cat master-list.txt| grep ^$out|awk '$0=$2';done |xargs -n3 | tr ' ' '\t'>cmd_name-in-out-cmd_str.tsv
 ```
 
-
-チェックリストの作成
+置換
 ```
-$ cat cmd-in-out.tsv  | awk '$0=$1' | xargs -I@ echo - [ ] @
+cat cmd_name-in-out-cmd_str.tsv | while read cmd_name in out cmd_str;do sed "s/INPUT_STR/$in/g;s/OUTPUT_STR/$out/g;s/CMD_STR/$cmd_str/g;" template.sh;done>$cmd_name/$cmd_name-ruby;done
+```
+
+チェックリスト作成
+```
+$ cat cmd_name-in-out-cmd_str.tsv  | awk '$0=$1' | xargs -I@ echo - [ ] @
+```
+
 - [ ] downcamel2upcamel
 - [ ] downcamel2snake
 - [ ] downcamel2screamsnake
@@ -65,23 +65,20 @@ $ cat cmd-in-out.tsv  | awk '$0=$1' | xargs -I@ echo - [ ] @
 - [ ] train2screamsnake
 - [ ] train2kebab
 
-```
+
+実装など
 
 
-コマンドの抽出
+コマンド抽出
 ```
-$ cat cmd-in-out.tsv | awk '{print $1,$2,$3}' OFS="\t" | while read cmd in out;do echo -e "$cmd\t$in\t$out"; sed -n 25p $cmd/$cmd-ruby|sed -r 's/echo\s+"\$\{STR\}"\s+\| //'|sed -r 's/^\s//g;s/^ //';done>cmd-in-out.txt
+$ cat cmd_name-in-out-cmd_str.tsv | awk '{print $1,$2,$3}' OFS="\t" | while read cmd_name in out;do echo -e "$cmd_name\t$in\t$out"; sed -n 25p $cmd_name/$cmd_name-ruby|sed -r 's/echo\s+"\$\{STR\}"\s+\| //'|sed -r 's/^\s//g;s/^ //';done>cmd_name-in-out-cmd_str.txt
 ```
 
-コマンド一覧の再生成
+テーブル再作成
 ```
-$ cat cmd-in-out.tsv | awk '{print $1}' | xargs -I@ grep -A1 -P ^@ cmd-in-out.txt|awk '{a+=NR%2}{b[a]=b[a]"\t"$0};END{for(e in b)print e,b[e]}'|sed 's/ \t/\t/'|sort -nk1|awk -v FS="\t" '{print $2,$3,$4,$5}' OFS="\t" | sponge cmd-in-out.tsv
+$ cat cmd_name-in-out-cmd_str.tsv | awk '{print $1}' | xargs -I@ grep -A1 -P ^@ cmd_name-in-out-cmd_str.txt|awk '{a+=NR%2}{b[a]=b[a]"\t"$0};END{for(e in b)print e,b[e]}'|sed 's/ \t/\t/'|sort -nk1|awk -v FS="\t" '{print $2,$3,$4,$5}' OFS="\t" | sponge cmd_name-in-out-cmd_str.tsv
 ```
 
 2回目以降
 
-cmd-in-out.tsvから自動生成
-
-```
-
-```
+パタンが増え次第上記のフローで自動生成
