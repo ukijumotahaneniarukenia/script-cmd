@@ -43,3 +43,8 @@ $ cat cmd-in-out.tsv  | awk '$0=$1' | xargs -I@ echo - [ ] @
 - [ ] train2kebab
 
 ```
+
+
+```
+cat cmd-in-out.tsv | awk '$0=$1' | while read cmd;do echo $cmd/$cmd-ruby; echo $cmd/$cmd-ruby | xargs -I@ sed -n '25p' @|sed 's/ /うんち/' | sed 's/ /うんこ/g'; done | xargs -n2|sed 's/う んこ/ /g' | sed 's/\sうんち\s/\t/'
+```
