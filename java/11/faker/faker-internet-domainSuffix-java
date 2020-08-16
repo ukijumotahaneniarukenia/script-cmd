@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+usage(){
+
+cat <<EOS
+
+Usage:
+
+  CMD: echo ja 10 | ${0##*/}
+
+EOS
+
+exit 0
+
+}
+
+main(){
+  ARGS=($(cat -));
+
+  if [[ 0 -eq ${#ARGS[@]} ]] ;then
+
+    usage
+
+  fi
+
+  echo ${ARGS[@]} | java -jar /home/aine/script-sketch/java/00011-java-fakerでダミーデータ作成/nnn/target/internet-domainSuffix-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || usage
