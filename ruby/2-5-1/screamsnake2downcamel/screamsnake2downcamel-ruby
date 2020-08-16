@@ -22,7 +22,7 @@ main(){
 
   fi
 
-  echo "${STR}"  | ruby -F_ -anle 'print $F[0].downcase,$F[1..$F.size-1].map{|e|e.slice(0)+e.slice(1..e.size).downcase}.join("")'
+  echo "${STR}" | ruby -F_ -anle 'print $F[0].downcase,$F[1..$F.size-1].map{|e|e.slice(0)+e.slice(1..e.size).downcase}.join("")'
 
 }
 
