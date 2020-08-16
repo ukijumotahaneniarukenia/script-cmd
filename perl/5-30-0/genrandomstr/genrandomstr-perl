@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+  SCRIPT_NAME_LIST:
+    A Adlam Ahom Anatolian_hieroglyphs Arabic Armenian Avestan
+    B Balinese Bamum Bassa_vah Batak Bengali Bhaiksuki Bopomofo Brahmi Braille Buginese Buhid
+    C Canadian_aboriginal Carian Caucasian_albanian Chakma Cham Cherokee Common Coptic Cuneiform Cypriot Cyrillic
+    D Deseret Devanagari Dogra Duployan
+    E Egyptian_hieroglyphs Elbasan Elymaic Ethiopic
+    G Georgian Glagolitic Gothic Grantha Greek Gujarati Gunjala_gondi Gurmukhi
+    H Han Hangul Hanifi_rohingya Hanunoo Hatran Hebrew Hiragana
+    I Imperial_aramaic Inherited Inscriptional_pahlavi Inscriptional_parthian
+    J Javanese
+    K Kaithi Kannada Katakana Kayah_li Kharoshthi Khmer Khojki Khudawadi
+    L Lao Latin Lepcha Limbu Linear_a Linear_b Lisu Lycian Lydian
+    M Mahajani Makasar Malayalam Mandaic Manichaean Marchen Masaram_gondi Medefaidrin Meetei_mayek Mende_kikakui Meroitic_cursive Meroitic_hieroglyphs Miao Modi Mongolian Mro Multani Myanmar
+    N Nabataean Nandinagari New_tai_lue Newa Nko Nushu Nyiakeng_puachue_hmong
+    O Ogham Ol_chiki Old_hungarian Old_italic Old_north_arabian Old_permic Old_persian Old_sogdian Old_south_arabian Old_turkic Oriya Osage Osmanya
+    P Pahawh_hmong Palmyrene Pau_cin_hau Phags_pa Phoenician Psalter_pahlavi
+    R Rejang Runic
+    S Samaritan Saurashtra Sharada Shavian Siddham SignWriting Sinhala Sogdian Sora_sompeng Soyombo Sundanese Syloti_nagri Syriac
+    T Tagalog Tagbanwa Tai_le Tai_tham Tai_viet Takri Tamil Tangut Telugu Thaana Thai Tibetan Tifinagh Tirhuta
+    U Ugaritic
+    V Vai
+    W Wancho Warang_citi
+    Y Yi
+    Z Zanabazar_square
+
+  PRE: sudo cpan String::Random
+
+
+   IN: ${0##*/} Katakana
+
+
+  OUT: サ㌍㋫ﾓル㌢ﾈピ㌽㌱㌻ㇸ㋜ｽラ㋗ホポ㋨㌧㌬ヶｾ㌂ホㇿ㌱𛅦㌋ゲズｫ㌥㌟ザ㍃ｭ㋢㋰㋭ﾚタ㍂㋩𛀀㌵ペﾛ㌘ズ㍏ジﾍャヰ㋻㋬㌙㋕ワケｱ㋣㌲ﾒ㍐㍈ㇰウ㍖ﾄㇱ㌧㍁㍋ﾘ㌢ヴ㋞㋰モｼﾒ㋤ﾖムｹ㍀ヌ㋫モ㍀ﾎﾚ㌪リ㋷㌁ﾀヨﾜ㌘㍉ユゥビ㌇㋼ㇸ㌖㌧㋵㋥ｽﾂ㋶ｲメ㍍㌪ㇻ㍕キ㌹㌹㍗メﾙﾂ㌡ㇷ㍔ｿㇷ㋠ヲ㌇ゾ㍆㋦ユ㌋ﾋㇶ㍆㌒ｹ㌡㋗ポ㍈㌣㌬ズヴｾｦ㌙ヹｺｱㇸﾘﾗォ㌌㌧ｯㇼ㋰ヽ㋥ㇰﾍィ㋧ㇷハゴ㋙㋪㋞ｫウド㋷㌙㌄㋧ﾌ㌚㋖㍊㋔ソ㍈オゼ㍇ヽプ㌲シ㋨ﾍㇰゼ㍌㌆バ㋘㌥㌝㍆㌛㋨㍔ヱㇴㇼㇰㇲ㌥㋪ｫㇿダヶ㌙㍌ｱﾚフㇴ㌊㌁㋶㌗ヨ㌴ﾋ㍌㌲㌸㌶ﾈテ㌕ㇵﾋﾒ㋪ｻ㍈ﾈㇹ㌬サﾗド㋑ギ㌹ﾊグｶｻトｧ㌛グｸㇽモグズ㌋㌾㋞フ㋤㌞㋐カ㋻㋸㌹㌮㋙ト𛀀㌈㋒テｭテリｬｹヽ㍉リヂ㌈
+EOS
+
+exit 0
+
+}
+
+SCRIPT_NAME="$1";shift;
+
+if [ -z "$SCRIPT_NAME" ];then
+
+  usage
+
+fi
+
+SCRIPT_RANGE_REGEXP=$(perl -C -MUnicode::UCD -E '($script_name)=@ARGV;$,="\t";$a=Unicode::UCD::charscript($script_name);map{($s,$e,$k)=@{$_};say sprintf(qq/%X %X/,$s,$e)} @{$a}' $SCRIPT_NAME |\
+  sed 's;^;\\\\x{;;s; ;}-\\\\x{;;;s;$;};'|xargs|tr -d ' ')
+
+SCRIPT_NAME_DEFINE_CNT=$(perl -C -MUnicode::UCD -E '($script_name)=@ARGV;$,="\t";$a=Unicode::UCD::charscript($script_name);map{($s,$e,$k)=@{$_};say $e-$s+1} @{$a}' $SCRIPT_NAME | \
+  awk '{a=a+$1}END{print a}')
+
+perl -C -MString::Random -E '($range,$cnt)=@ARGV;$pattern="[$range]{$cnt}";say eval "String::Random->new->randregex("."\"".$pattern."\"".")"' $SCRIPT_RANGE_REGEXP $SCRIPT_NAME_DEFINE_CNT 2>/dev/null
+
