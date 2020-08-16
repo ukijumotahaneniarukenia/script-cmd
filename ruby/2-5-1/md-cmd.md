@@ -46,5 +46,5 @@ $ cat cmd-in-out.tsv  | awk '$0=$1' | xargs -I@ echo - [ ] @
 
 
 ```
-cat cmd-in-out.tsv | awk '$0=$1' | while read cmd;do echo $cmd/$cmd-ruby; echo $cmd/$cmd-ruby | xargs -I@ sed -n '25p' @|sed 's/ /うんち/' | sed 's/ /うんこ/g'; done | xargs -n2|sed 's/う んこ/ /g' | sed 's/\sうんち\s/\t/'
+$ cat cmd-in-out.tsv | while read cmd in out ;do echo $cmdうんち$inうんち$out; echo $cmd/$cmd-ruby | xargs -I@ sed -n '25p' @|sed -r 's/^\s+/うんち/' | sed 's/ /うんこ/g'; done | xargs -n2|sed 's/うんこ/ /g' | sed -r 's/ ?うんち/\t/g' | sponge cmd-in-out.tsv
 ```
