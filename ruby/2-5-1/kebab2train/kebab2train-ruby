@@ -22,7 +22,7 @@ main(){
 
   fi
 
-  echo "${STR}" | ruby -F'(?=[A-Z])' -anle 'puts $F[0].downcase,$F[1..$F.size-1]'|tr -d \\\n|awk 4
+  echo "${STR}" | ruby -F- -anle 'print $F.map{|e|e.slice(0).upcase+e.slice(1..e.size-1).downcase}.join("-")'
 
 }
 
