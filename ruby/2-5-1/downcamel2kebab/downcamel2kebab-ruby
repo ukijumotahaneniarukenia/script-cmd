@@ -22,7 +22,7 @@ main(){
 
   for(( i=0;i<${#ARGS[@]};i++ ));do
 
-    echo ${ARGS[$i]} | ruby -F'(?=[A-Z])' -anle 'puts $F.map(CMD_STR:downcase).join("-")'
+    echo ${ARGS[$i]} | ruby -F'(?=[A-Z])' -anle 'puts $F.map(&:downcase).join("-")'
 
   done
 

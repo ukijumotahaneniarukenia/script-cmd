@@ -22,7 +22,7 @@ main(){
 
   for(( i=0;i<${#ARGS[@]};i++ ));do
 
-    echo ${ARGS[$i]} | ruby -F_ -anle 'print $F.map(CMD_STR:downcase).join("_")'
+    echo ${ARGS[$i]} | ruby -F_ -anle 'print $F.map(&:downcase).join("_")'
 
   done
 
