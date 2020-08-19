@@ -71,7 +71,7 @@ main(){
 
   fi
 
-	LF_CNT=$(echo "${ARGS[@]}" | xxd -ps -c1 | grep -c -vP '0a')
+  LF_CNT=$(echo "${ARGS[@]}" | xxd -ps -c1 | grep -c -vP '0a')
 
   if [[ 0 -eq "$LF_CNT" ]] ;then
 
@@ -81,9 +81,9 @@ main(){
 
   for x in $(eval echo {0..$[$CNT-1]}) ; do
 
-		echo "${ARGS[$x]}" | uniname -cebp | \
-			jq -Rcr './"\\n"|map(split(" ")|map(select(test("[^\u0020]"))))|transpose as $a|($a[0],$a[1],[$a|.[2:($a|length)]|flatten|join("-")])' | \
-			xargs -n3
+    echo "${ARGS[$x]}" | uniname -cebp | \
+    jq -Rcr './"\\n"|map(split(" ")|map(select(test("[^\u0020]"))))|transpose as $a|($a[0],$a[1],[$a|.[2:($a|length)]|flatten|join("-")])' | \
+    xargs -n3
 
   done
 
