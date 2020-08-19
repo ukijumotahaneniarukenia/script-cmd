@@ -4,6 +4,8 @@ usage(){
 cat <<EOS
 Usage:
 
+  PRE: sudo apt install -y uniutils
+
    IN: echo 元 ፡     ␠　気 もり ፡  ␈␠　もり 森鴎外 | xargs -n2 | ${0##*/}
 
   OUT:
