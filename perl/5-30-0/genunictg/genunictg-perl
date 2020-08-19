@@ -41,4 +41,4 @@ perl -C -MUnicode::UCD -E '$,="\t";($c)=@ARGV;($i,$r)=Unicode::UCD::prop_invmap(
 	grep -Po '[0-9]+ (?!Y)[0-9Y]+-[0-9N]+' | \
 	ruby -anle 'puts $F[0],$F[1].split("-").join("\n")' | \
 	xargs -n3 | \
-	perl -C -MString::Random -anlE '($k,$s,$e)=@F;$l=$l+($e-$s+1);$t=sprintf(qq/\\x{%X}-\\x{%X}/,$s,$e);push(@b,$t);END{say eval"String::Random->new->randregex("."\"[".(join "",@b)."]{".$l."}"."\")"}' 2>/dev/null
+	perl -C -MString::Random -anlE '($k,$s,$e)=@F;$l=$l+($e-$s);$t=sprintf(qq/\\x{%X}-\\x{%X}/,$s,$e-1);push(@b,$t);END{say eval"String::Random->new->randregex("."\"[".(join "",@b)."]{".$l."}"."\")"}' 2>/dev/null
