@@ -39,9 +39,9 @@ Usage:
 
     or
 
-	 IN: ${0##*/} A a ＠ B @
+   IN: ${0##*/} A a ＠ B @
 
-	OUT:
+  OUT:
        [UTF-32] [glyph] [name]
        [000041] [A] [LATIN-CAPITAL-LETTER-A]
        [000020] [SPACE] []
