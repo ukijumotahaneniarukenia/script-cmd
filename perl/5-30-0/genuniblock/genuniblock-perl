@@ -48,4 +48,4 @@ if [ -z "$BLOCK_NAME" ];then
 
 fi
 
-perl -C -MString::Random -MUnicode::UCD -E '$l;$a=Unicode::UCD::charblock(join " ",@ARGV);map{($s,$e,$k)=@{$_};$l=$l+($e-$s+1);$t=sprintf(qq/\\x{%X}-\\x{%X}/,$s,$e);push(@b,$t)} @{$a};END{say eval "String::Random->new->randregex("."\"[".(join "",@b)."]{".$l."}"."\")"}' $BLOCK_NAME 2>/dev/null
+perl -C -MString::Random -MUnicode::UCD -E '$l;$a=Unicode::UCD::charblock(join " ",@ARGV);map{($s,$e,$k)=@{$_};$l=$l+($e-$s+1);$t=sprintf(qq/\\x{%X}-\\x{%X}/,$s+1,$e);push(@b,$t)} @{$a};END{say eval "String::Random->new->randregex("."\"[".(join "",@b)."]{".$l."}"."\")"}' $BLOCK_NAME 2>/dev/null
