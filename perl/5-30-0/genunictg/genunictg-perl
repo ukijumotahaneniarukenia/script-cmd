@@ -31,6 +31,14 @@ if [ -z "$CATEGORY_NAME" ];then
 
 fi
 
-perl -C -MUnicode::UCD -E '$,="\t";($i,$r)=Unicode::UCD::prop_invmap("General Category");@a=@{$i};map{say @{$i}[$_],@{$r}[$_]}(0..$#a)'|awk -F'\t' '{a[NR]=$1","$2}END{for(e in a){split(a[e+1],b,",");split(a[e],c,",");print e,c[2],c[1],b[1]-1==-1?1114112:b[1]-1,((b[1]-1==-1?1114112:b[1]-1)-c[1]+1)}}' OFS='\t'|awk -F'\t' '{print $2,$3,$4}'|sort -k1,1 -k 2n|\
-  grep "$CATEGORY_NAME"|\
-  perl -C -MString::Random -anlE '($k,$s,$e)=@F;$l=$l+($e-$s+1);$t=sprintf(qq/\\x{%X}-\\x{%X}/,$s,$e);push(@b,$t);END{say eval"String::Random->new->randregex("."\"[".(join "",@b)."]{".$l."}"."\")"}' 2>/dev/null
+perl -C -MUnicode::UCD -E '$,="\t";($c)=@ARGV;($i,$r)=Unicode::UCD::prop_invmap($c);@a=@{$i};map{say @{$i}[$_],@{$r}[$_]}(0..$#a)' $CATEGORY_NAME | \
+	awk -v FS="\t" '$2=="N"{print 0,$1,$2}$2=="Y"{print 1,$1,$2}' | \
+	awk '{print a=a+$1,$2,$3}' | \
+	jq -Rc 'split(" ")' | \
+	jq -s 'group_by(.[0])[]|((map(.[0])|unique|join("")),(map(.[1])|join("-")),(map(.[2])|join("-")))' | \
+	xargs -n3 | \
+	sort -nk1 | \
+	grep -Po '[0-9]+ (?!Y)[0-9Y]+-[0-9N]+' | \
+	ruby -anle 'puts $F[0],$F[1].split("-").join("\n")' | \
+	xargs -n3 | \
+	perl -C -MString::Random -anlE '($k,$s,$e)=@F;$l=$l+($e-$s+1);$t=sprintf(qq/\\x{%X}-\\x{%X}/,$s,$e);push(@b,$t);END{say eval"String::Random->new->randregex("."\"[".(join "",@b)."]{".$l."}"."\")"}' 2>/dev/null
