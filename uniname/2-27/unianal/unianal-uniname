@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+
+   IN: echo 元 ፡     ␠　気 もり ፡  ␈␠　もり 森鴎外 | xargs -n2 | ${0##*/}
+
+  OUT:
+       [UTF-32] [glyph] [name]
+       [005143] [元] [CJK-character-Nelson-275]
+       [000020] [SPACE] []
+       [001361] [፡] [ETHIOPIC-WORDSPACE]
+       [002002] [EN] [SPACE]
+       [002003] [EM] [SPACE]
+       [002004] [THREE-PER-EM] [SPACE]
+       [002005] [FOUR-PER-EM] [SPACE]
+       [00202F] [ ] [NARROW-NO-BREAK-SPACE]
+       [002420] [␠] [SYMBOL-FOR-SPACE]
+       [003000] [IDEOGRAPHIC] [SPACE]
+       [006C17] [気] [CJK-character-Nelson-2480]
+       [00000A] [LINE] [FEED-(LF)]
+       [003082] [も] [HIRAGANA-LETTER-MO]
+       [00308A] [り] [HIRAGANA-LETTER-RI]
+       [000020] [SPACE] []
+       [001361] [፡] [ETHIOPIC-WORDSPACE]
+       [00202F] [ ] [NARROW-NO-BREAK-SPACE]
+       [00205F] [ ] [MEDIUM-MATHEMATICAL-SPACE]
+       [002408] [␈] [SYMBOL-FOR-BACKSPACE]
+       [002420] [␠] [SYMBOL-FOR-SPACE]
+       [003000] [IDEOGRAPHIC] [SPACE]
+       [003082] [も] [HIRAGANA-LETTER-MO]
+       [00308A] [り] [HIRAGANA-LETTER-RI]
+       [00000A] [LINE] [FEED-(LF)]
+       [0068EE] [森] [CJK-character-Nelson-2301]
+       [009D0E] [鴎] [CJK-character-Nelson-5367]
+       [005916] [外] [CJK-character-Nelson-1168]
+       [00000A] [LINE] [FEED-(LF)]
+
+    or
+
+	 IN: ${0##*/} A a ＠ B @
+
+	OUT:
+       [UTF-32] [glyph] [name]
+       [000041] [A] [LATIN-CAPITAL-LETTER-A]
+       [000020] [SPACE] []
+       [000061] [a] [LATIN-SMALL-LETTER-A]
+       [000020] [SPACE] []
+       [00FF20] [＠] [FULLWIDTH-COMMERCIAL-AT]
+       [000020] [SPACE] []
+       [000042] [B] [LATIN-CAPITAL-LETTER-B]
+       [000020] [SPACE] []
+       [000040] [@] [COMMERCIAL-AT]
+       [00000A] [LINE] [FEED-(LF)]
+
+EOS
+
+exit 0
+
+}
+
+main(){
+  ARGS=("$(cat -)"); #readAllのイメージでダブルクォート
+
+  CNT=${#ARGS[@]}
+
+  if [ -z "$CNT" ] ;then
+
+    usage
+
+  fi
+
+	LF_CNT=$(echo "${ARGS[@]}" | xxd -ps -c1 | grep -c -vP '0a')
+
+  if [[ 0 -eq "$LF_CNT" ]] ;then
+
+    usage
+
+  fi
+
+  for x in $(eval echo {0..$[$CNT-1]}) ; do
+
+		echo "${ARGS[$x]}" | uniname -cebp | \
+			jq -Rcr './"\\n"|map(split(" ")|map(select(test("[^\u0020]"))))|transpose as $a|($a[0],$a[1],[$a|.[2:($a|length)]|flatten|join("-")])' | \
+			xargs -n3
+
+  done
+
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || echo -ne "$@" | main
