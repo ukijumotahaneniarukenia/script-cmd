@@ -17,7 +17,34 @@ Usage:
        sudo apt -y install ruby-dev
 
   CMD : echo test.xml | #{f}
+
+     or
+
+  CMD : cat test.xml | #{f}
 EOF
+  return 0
+end
+
+def xml2jsonFile(ary)
+  ary.map{|e|
+    txt=Hash.from_xml(File.read(e)).to_json
+    f=e.slice!(/.*(?=\.xml)/);
+    File.open(f+".json","w") do |file|
+      file.puts txt;
+    end
+    puts txt
+  }
+  return 0
+end
+
+def xml2jsonNonFile(ary)
+
+  xmltxt=ary.join(" ")
+
+  jsontxt=Hash.from_xml(xmltxt).to_json
+
+  puts jsontxt
+
   return 0
 end
 
@@ -25,13 +52,20 @@ def mock(ary)
 
   includeLibrary
 
+  isFile=true
+
   ary.map{|e|
-    txt=Hash.from_xml(File.read(e)).to_json
-    f=e.slice!(/.*(?=\.xml)/);
-    File.open(f+".json","w") do |file|
-      file.puts txt;
-    end
+
+    isFile = isFile && File.file?(e)
+
   }
+
+  if isFile
+    xml2jsonFile(ary)
+  else
+    xml2jsonNonFile(ary)
+  end
+
   return 0
 end
 
