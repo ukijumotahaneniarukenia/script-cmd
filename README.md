@@ -9,13 +9,17 @@
 インストール
 
 ```
-$ find $HOME/script-cmd -type f -name "mysearch-install-bash" -o -name "mycmd-install-bash" | bash
+$ find $HOME/script-cmd -type f -name "mysearch-install-bash" | bash
+
+$ find $HOME/script-cmd -type f -name "mycmd-install-bash" | bash
 ```
 
 アンインストール
 
 ```
-$ find $HOME/script-cmd -type f -name "mysearch-uninstall-bash" -o -name "mycmd-uninstall-bash" | bash
+$ find $HOME/script-cmd -type f -name "mysearch-uninstall-bash" | bash
+
+$ find $HOME/script-cmd -type f -name "mycmd-uninstall-bash" | bash
 ```
 
 
