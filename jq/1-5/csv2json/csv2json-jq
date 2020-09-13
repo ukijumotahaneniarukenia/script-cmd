@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+usage(){
+  cat <<EOS
+Usage:
+
+CMD: ${0##*/} test.csv
+
+EOS
+
+exit 0
+}
+
+CSV_FILE_NAME=$1;shift
+
+[ -z ${CSV_FILE_NAME} ] && usage
+
+INPUT_FILE_EXTENSION=$(echo $CSV_FILE_NAME | ruby -F'\.' -anle 'puts $F[$F.size-1]')
+
+if [ ! $INPUT_FILE_EXTENSION == "csv" ];then
+
+  usage
+
+fi
+
+JSON_FILE_NAME=${CSV_FILE_NAME//.*}.json
+
+[ -z ${JSON_FILE_NAME} ] && usage
+
+cat $CSV_FILE_NAME | \
+	jq -R './"\n"|map(./",")|flatten' | \
+	jq -s '. as $all_entry|.[0] as $head_entry|.[1:($all_entry|length)] as $detail_entry|$detail_entry|length as $detail_cnt|[range(0;$detail_cnt)]|map(. as $row|[range(0;$detail_entry[$row]|length)]|map(. as $col|{($head_entry[$col]):$detail_entry[$row][$col]}))[]|reduce .[] as $entry({};.+$entry)' | \
+	jq -s '' >$JSON_FILE_NAME
