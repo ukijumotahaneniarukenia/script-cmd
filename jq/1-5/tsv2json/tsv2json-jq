@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
 usage(){
-cat <<EOS
+  cat <<EOS
 Usage:
-   IN: ${0##*/} test.tsv test.json
-  OUT:
+
+CMD: ${0##*/} test.tsv
+
 EOS
 
 exit 0
-
 }
 
-INPUT_FILE_NAME="$1";shift;
-OUTPUT_FILE_NAME="$1";shift;
+TSV_FILE_NAME=$1;shift
 
-INPUT_FILE_EXTENSION=$(echo $INPUT_FILE_NAME | ruby -F'\.' -anle 'puts $F[$F.size-1]')
-OUTPUT_FILE_EXTENSION=$(echo $OUTPUT_FILE_NAME | ruby -F'\.' -anle 'puts $F[$F.size-1]')
+[ -z ${TSV_FILE_NAME} ] && usage
+
+INPUT_FILE_EXTENSION=$(echo $TSV_FILE_NAME | ruby -F'\.' -anle 'puts $F[$F.size-1]')
 
 if [ ! $INPUT_FILE_EXTENSION == "tsv" ];then
 
@@ -23,22 +23,11 @@ if [ ! $INPUT_FILE_EXTENSION == "tsv" ];then
 
 fi
 
-if [ ! $OUTPUT_FILE_EXTENSION == "json" ];then
+JSON_FILE_NAME=${TSV_FILE_NAME//.*}.json
 
-  usage
+[ -z ${JSON_FILE_NAME} ] && usage
 
-fi
-
-if [ ! -f "$INPUT_FILE_NAME" ];then
-
-  usage
-
-fi
-
-if [ -z "$OUTPUT_FILE_NAME" ];then
-
-  usage
-
-fi
-
-jq -s -R 'split("\n")|map(.|select(.!=""))|map(split("\t")) as $a|($a|length) as $row|($a[0]|length) as $col|[range(0;$row)]|map(. as $rn|[range(0;$col)]|map({("col"+("00000"+(.+1|tostring))[-3:]):$a[$rn][.]})|reduce .[] as $item({};.+$item))' $INPUT_FILE_NAME >$OUTPUT_FILE_NAME
+cat $TSV_FILE_NAME | \
+	jq -R './"\n"|map(./"\t")|flatten' | \
+	jq -s '. as $all_entry|.[0] as $head_entry|.[1:($all_entry|length)] as $detail_entry|$detail_entry|length as $detail_cnt|[range(0;$detail_cnt)]|map(. as $row|[range(0;$detail_entry[$row]|length)]|map(. as $col|{($head_entry[$col]):$detail_entry[$row][$col]}))[]|reduce .[] as $entry({};.+$entry)' | \
+	jq -s '' >$JSON_FILE_NAME
