@@ -7,6 +7,8 @@ Usage:
 
 CMD: ${0##*/} /bin
 
+CMD: ${0##*/} \$(pwd)
+
 EOS
 
 exit 0
