@@ -5,7 +5,9 @@ usage(){
 cat <<EOS
 Usage:
 
-CMD: bash ${0##*/} /bin
+CMD: ${0##*/} /bin
+
+CMD: ${0##*/} \$(pwd)
 
 EOS
 
