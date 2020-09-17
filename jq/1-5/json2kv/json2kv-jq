@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+
+  CMD: cat test.json | ${0##.*/}
+
+EOS
+
+exit 0
+
+}
+
+main(){
+  cat - | \
+  jq -cr '. as $in|[path(..)]|map(. as $path|{"k":($path|map(if type == "string" then "."+tojson else "["+tostring+"]" end)|join("")),"v":($in|getpath($path))})[]|"\(.k)\t\(.v|tojson)"'|\
+  sed '1ikey\tvalue'
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || usage
