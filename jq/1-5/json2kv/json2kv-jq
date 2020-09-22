@@ -4,7 +4,11 @@ usage(){
 cat <<EOS
 Usage:
 
-  CMD: cat test.json | ${0##.*/}
+   CMD: echo test.json | ${0##*/}
+
+   or
+
+   CMD: echo '{"ID":1,"なまえ":"ぽるこ","役割":"ぶた"}' | ${0##*/}
 
 EOS
 
@@ -13,10 +17,36 @@ exit 0
 }
 
 main(){
-  cat - | \
-  jq -cr '. as $in|[path(..)]|map(. as $path|{"k":($path|map(if type == "string" then "."+tojson else "["+tostring+"]" end)|join("")),"v":($in|getpath($path))})[]|"\(.k)\t\(.v|tojson)"'|\
-  sed '1ikey\tvalue'
+  ARGS=($(cat -));
+
+  CNT=${#ARGS[@]}
+
+  if [ -z $CNT ] ;then
+
+    usage
+
+  fi
+
+  if [[ 1 -ne $CNT ]] ;then
+
+    usage
+
+  fi
+
+  if [ -f ${ARGS[0]} ] ;then
+
+    cat ${ARGS[0]} | \
+      sed '/^$/d' | \
+      jq -r '. as $in|[path(..)] | map(. as $path | {"k":((if ($in|type) == "array" then "." else "" end)+($path|map((if type == "string" then "." + tojson else "["+tostring+"]" end))|join(""))),"v":($in|getpath($path))})[]|"\(.k)\t\(.v|tojson)"' | sed '1ikey\tvalue'
+
+  else
+
+    echo ${ARGS[0]} | \
+      jq -r '. as $in|[path(..)] | map(. as $path | {"k":((if ($in|type) == "array" then "." else "" end)+($path|map((if type == "string" then "." + tojson else "["+tostring+"]" end))|join(""))),"v":($in|getpath($path))})[]|"\(.k)\t\(.v|tojson)"' | sed '1ikey\tvalue'
+
+  fi
+
 }
 
 [ -p /dev/stdin ] && cat - | main
-[ -p /dev/stdin ] || usage
+[ -p /dev/stdin ] || echo -ne "$@" | main
