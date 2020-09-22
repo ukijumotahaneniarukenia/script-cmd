@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+
+   CMD: echo test.json | ${0##*/}
+
+   or
+
+   CMD: echo '{"ID":1,"なまえ":"ぽるこ","役割":"ぶた"}' | ${0##*/}
+
+EOS
+
+exit 0
+
+}
+
+main(){
+  ARGS=($(cat -));
+
+  CNT=${#ARGS[@]}
+
+  if [ -z $CNT ] ;then
+
+    usage
+
+  fi
+
+  if [[ 1 -ne $CNT ]] ;then
+
+    usage
+
+  fi
+
+  if [ -f ${ARGS[0]} ] ;then
+
+    cat ${ARGS[0]} | \
+      sed '/^$/d' | \
+      jq -r '. as $in | (if type == "array" then map(keys) else [keys] end) as $key_list | $key_list | reduce .[] as $item([];. + $item)|unique as $column_list | ($column_list|join("\t")),(if ($in|type) == "array" then ($in|map(. as $entry |($column_list|map(. as $column|($entry[$column]|tojson))|join("\t")))[]) else ($column_list|map(. as $column|($in[$column]|tojson))|join("\t")) end)'
+
+  else
+
+    echo ${ARGS[0]} | \
+      jq -r '. as $in | (if type == "array" then map(keys) else [keys] end) as $key_list | $key_list | reduce .[] as $item([];. + $item)|unique as $column_list | ($column_list|join("\t")),(if ($in|type) == "array" then ($in|map(. as $entry |($column_list|map(. as $column|($entry[$column]|tojson))|join("\t")))[]) else ($column_list|map(. as $column|($in[$column]|tojson))|join("\t")) end)'
+
+  fi
+
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || echo -ne "$@" | main
