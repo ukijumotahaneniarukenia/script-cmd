@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+
+   CMD: cat test.html | ${0##*/}
+
+   or
+
+   CMD: ${0##*/} test.html
+
+EOS
+
+exit 0
+
+}
+
+main(){
+  ARGS=("$(cat -)");
+
+  if [ -f "${ARGS[@]}" ];then
+
+    cat "${ARGS[@]}" | sed -e :a -re 's/<!--.*?-->//g;/<!--/N;//ba' | sed -e :a -re 's/\/\*.*?\*\///g;/\/\*/N;//ba' | sed -r 's/<!--.*?-->//g;'
+
+  else
+
+    echo "${ARGS[@]}" | sed -e :a -re 's/<!--.*?-->//g;/<!--/N;//ba' | sed -e :a -re 's/\/\*.*?\*\///g;/\/\*/N;//ba' | sed -r 's/<!--.*?-->//g;'
+
+  fi
+
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || echo -ne "$@" | main
