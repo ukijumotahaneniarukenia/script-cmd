@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+usage(){
+
+cat <<EOS
+Usage
+
+CHK: ls -lh package-lock.json
+
+CMD: ${0##*/}
+
+EOS
+
+exit 0
+
+}
+
+if [ ! -f package-lock.json ];then
+
+  usage
+
+fi
+
+cat package-lock.json | jq '.dependencies|to_entries' | \
+  jq '
+def UNKO(prevReferredLibInfoList):
+  if(.value | has("dependencies")) then
+    [{"name":.key,"version":(.value | .version),"resolved":(.value | .resolved),"integrity":(.value | .integrity),"requires":(.requires|if . != null then (to_entries|map(.key+":"+.value)|join(",")) else null end)}] as $currentReferredLibInfoList |
+    (.value|.dependencies|to_entries|.[]|UNKO(prevReferredLibInfoList + $currentReferredLibInfoList))
+  else
+    [prevReferredLibInfoList[],{"name":.key,"version":(.value | .version),"resolved":(.value | .resolved),"integrity":(.value | .integrity),"requires":(.value|.requires|if . != null then (to_entries|map(.key+":"+.value)|join(",")) else null end)}]
+  end;
+.[]|UNKO([])
+' | jq -sr '
+group_by(.[0])[]|
+map(.[0]+(if (.[1]|length)==0 then .[0]|select(.!=null)|with_entries(.key |= "depend_on_" + .)|with_entries(.value |= null) else .[1]|select(.!=null)|with_entries(.key |= "depend_on_" + .) end))[]|
+[.name,.version,.resolved,.integrity,.requires,.depend_on_name,.depend_on_version,.depend_on_resolved,.depend_on_integrity,.depend_on_requires]|@tsv' | \
+sed '1iname\tversion\tresolved\tintegrity\trequires\tdepend_on_name\tdepend_on_version\tdepend_on_resolved\tdepend_on_integrity\tdepend_on_requires' >package-lock.tsv
