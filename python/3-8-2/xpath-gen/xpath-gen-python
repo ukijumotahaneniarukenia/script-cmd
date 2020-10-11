@@ -58,7 +58,6 @@ def debug_log_yellow(msg):
 
 
 def NNN(html, target_element, prev_target_element_tag, prev_xpath, xpath_list, prev_xpath_list):
-    print(xpath_list[-1])
 
     if etree.iselement(target_element) and not len(target_element.getchildren()) == 0:
 
@@ -175,6 +174,8 @@ def wrapper(file_name, *debug_mode):
 
         # 元ネタは持ち回る必要がある
         NNN(html, doc, prev_target_element_tag, prev_xpath, xpath_list, prev_xpath_list)
+
+        print('\n'.join(xpath_list))
 
 
 IS_DEBUG = 0
