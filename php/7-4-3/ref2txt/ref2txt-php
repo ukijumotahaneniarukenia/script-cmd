@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+
+   CMD: cat test.txt | ${0##*/}
+
+   or
+
+   CMD: echo '&lt;&amp;' | ${0##*/}
+
+EOS
+
+exit 0
+
+}
+
+main(){
+  ARGS=("$(cat -)");
+
+  if [ -z "${ARGS[@]}" ]; then
+    usage
+  fi
+
+  if [ -f "${ARGS[@]}" ];then
+
+    cat "${ARGS[@]}" | php -R 'echo mb_convert_encoding($argn, "UTF-8", "HTML-ENTITIES")."\n";'
+
+  else
+
+    echo "${ARGS[@]}" | php -R 'echo mb_convert_encoding($argn, "UTF-8", "HTML-ENTITIES")."\n";'
+
+  fi
+
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || echo -ne "$@" | main
