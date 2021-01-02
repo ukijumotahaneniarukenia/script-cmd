@@ -11,7 +11,7 @@ USAGE:
 
   CMD_LIST:
 
-  $(npm run)
+  $(cd $HOME/script-cmd/npm/6-14-9/nak5 && npm run)
 
 EOS
 
