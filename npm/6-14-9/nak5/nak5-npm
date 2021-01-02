@@ -39,6 +39,8 @@ if [ ${TARGET_CMD_LIST[0]} == "nak5" ];then
 
   REMAIN_ARGS=${TARGET_CMD_LIST[@]:1}
 
+  #EXECUTE_CMD_LIST=$(cat $LOCATION_PACKAGE_JSON/package.json | jq -r '.scripts|to_entries|map(select(.key!="@h" and .key!="@nak5" and .key != "nak5")|.key)|join(" ")')
+
   cd $LOCATION_PACKAGE_JSON && npm run nak5 $REMAIN_ARGS
 
   exit 0
@@ -53,4 +55,6 @@ if [[ $? -eq 1 ]];then
 
 fi
 
-cd $LOCATION_PACKAGE_JSON && npm run "${@}" | sed -n '1,4!p'
+cd $LOCATION_PACKAGE_JSON && npm run "${@}"
+
+exit 0
