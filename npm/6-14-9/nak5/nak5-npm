@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+
+USAGE:
+
+  IN: ${0##*/} @a @{a..d}
+
+  OUT: @a @b @c @d
+
+  CMD_LIST:
+
+  $(npm run)
+
+EOS
+
+exit 0
+
+}
+
+TARGET_CMD_LIST=("${@}")
+
+#echo ${TARGET_CMD_LIST[@]}  #配列全要素
+#echo ${TARGET_CMD_LIST[0]}  #配列先頭要素
+#echo ${!TARGET_CMD_LIST[@]} #配列インデックス
+#echo ${#TARGET_CMD_LIST[@]} #配列要素数
+
+if [[ ${#TARGET_CMD_LIST[@]} -eq 0 ]];then
+
+  usage
+
+fi
+
+npm run "${@}" 1>/dev/null 2>&1
+
+if [[ $? -eq 1 ]];then
+
+  usage
+
+fi
+
+npm run "${@}" | sed -n '1,4!p'
