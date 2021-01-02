@@ -1,12 +1,12 @@
 {
   "scripts": {
-    "nak5": "npm-run-all -p @*",
-    "@nak5": "#This is infinity loop;npm-run-all -p @*;",
+    "nak5": "npm-run-all \"@* -- {@}\" --",
+    "@nak5": "#This is infinity loop;npm-run-all -p \"@* -- {@}\" --",
     "@n": "echo",
     "@a": "echo",
     "@k": "echo",
     "@5": "echo",
-    "@h": "# https://ics.media/entry/12226/ \n      https://docs.npmjs.com/cli/v6/commands/npm-config"
+    "@h": "# https://ics.media/entry/12226/ \n      #https://docs.npmjs.com/cli/v6/commands/npm-config"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"

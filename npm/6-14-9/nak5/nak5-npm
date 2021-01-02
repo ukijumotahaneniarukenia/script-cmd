@@ -11,7 +11,7 @@ USAGE:
 
   CMD_LIST:
 
-  $(cd $HOME/script-cmd/npm/6-14-9/nak5 && npm run)
+  $(cd $LOCATION_PACKAGE_JSON && npm run)
 
 EOS
 
@@ -19,7 +19,10 @@ exit 0
 
 }
 
+LOCATION_PACKAGE_JSON=$HOME/script-cmd/npm/6-14-9/nak5
+
 TARGET_CMD_LIST=("${@}")
+REMAIN_ARGS=
 
 #echo ${TARGET_CMD_LIST[@]}  #配列全要素
 #echo ${TARGET_CMD_LIST[0]}  #配列先頭要素
@@ -32,7 +35,17 @@ if [[ ${#TARGET_CMD_LIST[@]} -eq 0 ]];then
 
 fi
 
-npm run "${@}" 1>/dev/null 2>&1
+if [ ${TARGET_CMD_LIST[0]} == "nak5" ];then
+
+  REMAIN_ARGS=${TARGET_CMD_LIST[@]:1}
+
+  cd $LOCATION_PACKAGE_JSON && npm run nak5 $REMAIN_ARGS
+
+  exit 0
+
+fi
+
+cd $LOCATION_PACKAGE_JSON && npm run "${@}" 1>/dev/null 2>&1
 
 if [[ $? -eq 1 ]];then
 
@@ -40,4 +53,4 @@ if [[ $? -eq 1 ]];then
 
 fi
 
-npm run "${@}" | sed -n '1,4!p'
+cd $LOCATION_PACKAGE_JSON && npm run "${@}" | sed -n '1,4!p'
