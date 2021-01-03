@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+ps uax | grep -P 'node /usr/bin/browser-run --port' | awk '$0=$2' | grep -v grep | xargs kill -9

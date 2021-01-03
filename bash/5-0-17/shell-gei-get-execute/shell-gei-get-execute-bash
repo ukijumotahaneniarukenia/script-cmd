@@ -29,6 +29,4 @@ if [ ! -s "$INPUT_FILE_NAME" ];then
 
 fi
 
-
 cat $INPUT_FILE_NAME | sed -r '/^$/d;' | sed -r 's/^ +//g' | awk -v SHELL_GEI_HASH_TAG=$SHELL_GEI_HASH_TAG '{if($0 ~ SHELL_GEI_HASH_TAG) {print 1,$0}else{print 0,$0}}' |awk 'BEGIN{a=0}{a=a+$1;$1="";print a"========="$0}' |ruby -F'=========' -anle 'BEGIN{a=[]};a<<$F;END{a.group_by{|k,v|k}.map{|kk,vv|puts vv.map{|i|i[1]}.join(" ")+"\n"*10}}'
-
