@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+ps uax | grep -P 'shell-gei' | awk '$0=$2' | grep -v grep | xargs kill -9
+
 ps uax | grep -P 'node /usr/bin/browser-run --port' | awk '$0=$2' | grep -v grep | xargs kill -9
 
-ps uax | grep -P 'shell-gei' | awk '$0=$2' | grep -v grep | xargs kill -9
+ls $HOME/Downloads/xpath-info-*json -1 | xargs rm
