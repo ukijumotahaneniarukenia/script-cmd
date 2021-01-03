@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+#事前に以下のChrome拡張にダウンローダーを仕込んでおくこと
+
+#https://github.com/nakajmg/ScriptAutoRunner
+
+#ダウンローダーのファイル
+#https://github.com/ukijumotahaneniarukenia/script-bookmarklet/blob/main/twitter-my-bookmark-downloader.js
+
+usage(){
+cat <<EOS
+
+USAGE:
+
+  CMD: ${0#./} START_DATE_YYYYMMDD END_DATE_YYYYMMDD
+
+  CMD: ${0#./} 2020-11-30 2020-12-31
+
+EOS
+
+exit 0
+
+}
+
+START_DATE_YYYYMMDD=$1;shift
+END_DATE_YYYYMMDD=$1;shift
+
+START_PORT=49152
+OPEN_PORT_COUNT=16383
+NEXT_REFRESH_TIME_SECONDS=600
+
+if [ -z $START_DATE_YYYYMMDD ];then
+
+  START_DATE_YYYYMMDD=$(date '+%Y-%m-%d')
+
+fi
+
+if [ -z $END_DATE_YYYYMMDD ];then
+
+	END_DATE_YYYYMMDD=$(date -d '1 days' '+%Y-%m-%d')
+
+fi
+
+for (( PORT=$START_PORT;PORT<=$START_PORT+$OPEN_PORT_COUNT;PORT++ ));do
+
+  echo $PORT $[$PORT - $START_PORT + 1]
+
+  echo "location.href='https://twitter.com/search?q=%23shellgei%20OR%20%23shellgei2%20OR%20%23%E3%82%86%E3%82%8B%E3%82%B7%E3%82%A7%E3%83%AB%20OR%20%23%E3%82%B7%E3%82%A7%E3%83%AB%E8%8A%B8%20OR%20%20%23%E5%8D%B1%E9%99%BA%E3%82%B7%E3%82%A7%E3%83%AB%E8%8A%B8%20OR%20%20%23%E3%82%86%E3%82%8B%E3%82%B7%E3%82%A7%E3%83%AB%20OR%20%20%23%E9%99%A4%E5%A4%9C%E3%81%AE%E3%82%B7%E3%82%A7%E3%83%AB%E8%8A%B8%20OR%20%20%23%E6%96%B0%E6%98%A5%E3%82%B7%E3%82%A7%E3%83%AB%E8%8A%B8%20OR%20%20%23%E5%B9%B4%E8%B6%8A%E3%81%97%E3%82%B7%E3%82%A7%E3%83%AB%E8%8A%B8%20since%3A$START_DATE_YYYYMMDD%20until%3A$END_DATE_YYYYMMDD&src=typed_query'" | browser-run --port $PORT &
+
+  P=$(lsof -i:$PORT | awk '$0=$2' | tail -n-1)
+
+  if [[ -n $P ]];then
+
+    kill -9 $P
+
+  fi
+
+  #Chrome拡張が使えるヘッドレスブラウザがほしい
+  google-chrome "http://localhost:$PORT"
+
+  sleep $NEXT_REFRESH_TIME_SECONDS
+
+done

@@ -7,6 +7,10 @@ USAGE:
 
   CMD: ${0##*/} xpath-info-2021-01-03T14-40-18.json
 
+  ENABLE JSON FILE BELOW
+
+$(ls ~/Downloads/xpath-info-*json -1 | sort -r)
+
 EOS
 
 exit 0
