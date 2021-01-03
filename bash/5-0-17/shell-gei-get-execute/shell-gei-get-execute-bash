@@ -6,6 +6,8 @@ cat <<EOS
 USAGE:
 
   ACTION : Please Execute shell-gei-get-prepare-bash Before Execute shell-gei-get-execute-bash
+  
+  CMD : ${0##*/} 1>$HOME/${0##*/}.log 2>&1 &
 
 EOS
 
