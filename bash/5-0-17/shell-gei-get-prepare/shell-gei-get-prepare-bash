@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+
+USAGE:
+
+  CMD: ${0##*/} xpath-info-2021-01-03T14-40-18.json
+
+EOS
+
+exit 0
+
+}
+
+INPUT_FILE_NAME="$1";shift;
+INPUT_FILE_EXTENSION=$(echo $INPUT_FILE_NAME | ruby -F'\.' -anle 'puts $F[$F.size-1]')
+
+if [ -f "a.html" -o -f "a.txt" ];then
+
+  rm a.html a.txt
+
+fi
+
+if [ ! $INPUT_FILE_EXTENSION == "json" ];then
+
+  usage
+
+fi
+
+if [ ! -f "$INPUT_FILE_NAME" ];then
+
+  usage
+
+fi
+
+cat $INPUT_FILE_NAME | jq -r 'map(select(.targetXpath|test("article$"))|.targetElement)[]' >a.html
+
+P=$(lsof -i:9090 | awk '$0=$2'|tail -n-1)
+
+if [[ -n $P ]];then
+
+  kill -9 $P
+
+fi
+
+cat a.html | tidy -i 2>/dev/null | sed -r 's/^<html>/<html lang="ja">/' | sed '6i<meta charset="UTF-8" />' | sed -r '/^<body>/a<div>' | sed -r '/^<\/body>/i</div>' | tidy -i 2>/dev/null | sed -r '/^<\/body>/i<script>console.log(Array.from(document.querySelectorAll("span")).map(item=>{return item.textContent}))</script>'|  browser-run --port 9090 --input html > a.txt &
