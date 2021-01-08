@@ -6,28 +6,9 @@ EXCLUDE_LIST="\.git|[A-Z][0-9]{2}"
 SCRIPT_CMD_DIR_NAME=script-cmd
 INSTALL_DIR_NAME=$HOME/.local/$SCRIPT_CMD_DIR_NAME/bin
 
-usage(){
-cat <<EOS
-Usage:
-   PRE: cd $HOME && rm -rf $SCRIPT_CMD_DIR_NAME && git clone https://github.com/ukijumotahaneniarukenia/$SCRIPT_CMD_DIR_NAME.git && mkdir -p $INSTALL_DIR_NAME
-   CMD: ${0##*/}
-EOS
+mkdir -p $INSTALL_DIR_NAME
 
-exit 0
-
-}
-
-if [ ! -d $HOME/$SCRIPT_CMD_DIR_NAME ];then
-
-  usage
-
-fi
-
-if [ ! -d $INSTALL_DIR_NAME ];then
-
-  usage
-
-fi
+git clone https://github.com/ukijumotahaneniarukenia/$SCRIPT_CMD_DIR_NAME.git $HOME/$SCRIPT_CMD_DIR_NAME
 
 find $HOME/$SCRIPT_CMD_DIR_NAME -type f | grep -vP "$EXCLUDE_LIST" | xargs file | grep -P "$INCLUDE_LIST" | cut -d':' -f1 | sort -r | \
   while read f;do
