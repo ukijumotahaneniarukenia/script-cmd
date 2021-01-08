@@ -26,3 +26,5 @@ find $HOME/$SCRIPT_CMD_DIR_NAME -type f | grep -vP "$EXCLUDE_LIST" | xargs file 
       echo unlink $HOME/.local/$SCRIPT_CMD_DIR_NAME/bin/${f##*/}-$CMD_HOST_VERSION;
     } | bash
   done
+
+find $HOME/.local/$SCRIPT_CMD_DIR_NAME/bin -xtype l |xargs -I@ unlink @
