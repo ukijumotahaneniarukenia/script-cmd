@@ -2,9 +2,11 @@
 
 usage(){
 cat <<EOS
+
 Usage:
-   IN: $0 2 ジーナ マルコ 紅の豚
-  OUT:
+
+   CMD: ${0##*/} 2 ジーナ マルコ 紅の豚
+
 EOS
 
 exit 0
