@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+SEPARATOR_PATTERN=$1;shift;
+INPUT_FILE_NAME=$1;shift;
+
+usage(){
+cat <<EOS
+
+USAGE:
+
+  CMD: ${0##*/} 1 a.json
+
+  separator pattern 1
+
+    kebab2downcamel
+
+    unko-mori-mori >>> unkoMoriMori
+
+  separator pattern 2
+
+    snake2downcamel
+
+    unko_mori_mori >>> unkoMoriMori
+
+  separator pattern 3
+
+    screamsnake2downcamel
+
+    UNKO_MORI_MORI >> unkoMoriMori
+
+  separator pattern 4
+
+    train2downcamel
+
+    Unko-Mori-Mori >>> unkoMoriMori
+
+  separator pattern 5
+
+    upcamel2downcamel
+
+    UnkoMoriMori >>> unkoMoriMori
+
+EOS
+
+exit 0
+
+}
+
+if [ ! -f "$INPUT_FILE_NAME" ];then
+
+  usage
+
+fi
+
+if [ -z "$SEPARATOR_PATTERN" ];then
+
+  usage
+
+fi
+
+if [[ $SEPARATOR_PATTERN -eq 1 ]];then
+# kebab2downcamel
+# unko-mori-mori >>> unkoMoriMori
+
+  json-ts $INPUT_FILE_NAME | perl -nlE '@a=split(/-/,$_);/((?:[a-zA-Z]+-)+[a-zA-Z]+)(.*)/ and say join "",map{ucfirst}@a or say'| teip -Gog '\x27' -- sed 's/.//g'
+
+elif [[ $SEPARATOR_PATTERN -eq 2 ]];then
+# snake2downcamel
+# unko_mori_mori >>> unkoMoriMori
+
+  json-ts $INPUT_FILE_NAME | perl -nlE '@a=split(/_/,$_);/((?:[a-zA-Z]+_)+[a-zA-Z]+)(.*)/ and say join "",map{ucfirst}@a or say'| teip -Gog '\x27' -- sed 's/.//g'
+
+elif [[ $SEPARATOR_PATTERN -eq 3 ]];then
+# screamsnake2downcamel
+# UNKO_MORI_MORI >> unkoMoriMori
+
+  json-ts $INPUT_FILE_NAME | perl -nlE '@a=split(/_/,$_);/((?:[a-zA-Z]+_)+[a-zA-Z]+)(.*)/ and say lc @a[0],map{substr($_,0,1).lc substr($_,1)}@a[1,length @a] or say'| teip -Gog '\x27' -- sed 's/.//g'
+
+elif [[ $SEPARATOR_PATTERN -eq 4 ]];then
+# train2downcamel
+# Unko-Mori-Mori >>> unkoMoriMori
+
+  json-ts $INPUT_FILE_NAME | perl -nlE '@a=split(/-/,$_);/((?:[a-zA-Z]+-)+[a-zA-Z]+)(.*)/ and say lcfirst @a[0],join "",@a[1,length @a] or say'| teip -Gog '\x27' -- sed 's/.//g'
+
+elif [[ $SEPARATOR_PATTERN -eq 5 ]];then
+# upcamel2downcamel
+# UnkoMoriMori >>> unkoMoriMori
+
+  json-ts $INPUT_FILE_NAME | perl -nlE '@a=split(/(?=[A-Z])/,$_);/((?:[a-zA-Z]+)+)(.*)/ and say lcfirst @a[0],join "",@a[1,length @a] or say'| teip -Gog '\x27' -- sed 's/.//g'
+
+else
+
+  usage
+
+fi
