@@ -6,6 +6,27 @@ INPUT_FILE_NAME=$1;shift;
 usage(){
 cat <<EOS
 
+check json file unique key list this command then decide separator pattern
+
+$ cat test.json | jq 'walk(if type=="object" then to_entries else . end)' | jq --stream -c ''|grep key|jq '.[1]'|sort|uniq
+"cast"
+"director"
+"genre"
+"id"
+"imdb-info"
+"movie"
+"mpaa-rating"
+"name"
+"person"
+"playlist"
+"release-date"
+"role"
+"running-time"
+"score"
+"synopsis"
+"title"
+"url"
+
 USAGE:
 
   CMD: ${0##*/} 1 a.json
