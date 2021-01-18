@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+
+USAGE:
+
+  CMD: echo "[          {            text: 'Admin',            href: '#'          },          {            text: 'Manage',            href: '#'          },          {            text: 'Library',            active: true          }        ]" | ${0##.*/}
+
+EOS
+
+exit 0
+
+}
+
+main(){
+  cat - >a.js
+  sed -i '1imodule.exports =' a.js
+  node -e 'const a = require("./a.js");console.log(JSON.stringify(a))' | jq
+  rm a.js
+}
+
+[ -p /dev/stdin ] && cat - | main
+[ -p /dev/stdin ] || echo -ne "$@" | main
