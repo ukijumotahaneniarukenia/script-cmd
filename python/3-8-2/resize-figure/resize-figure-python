@@ -32,7 +32,7 @@ def execute(target_file_path):
 
     img_resize_lanczos = img.resize((target_width,math.floor(img_ratio * target_width)), Image.LANCZOS)
 
-    img_resize_lanczos.save(target_file_name + '-' + str(target_width) + 'h' + '-' + str(math.floor(img_ratio * target_width)) + 'w' + target_file_extension)
+    img_resize_lanczos.save(target_file_name + '-' + str(target_width) + 'w' + '-' + str(math.floor(img_ratio * target_width)) + 'h' + target_file_extension)
 
 def main():
 
