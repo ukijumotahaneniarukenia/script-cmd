@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+usage(){
+cat <<EOS
+Usage:
+
+  PRE: sudo apt install -y gpac
+
+  CMD: ${0##*/} test.mp4
+EOS
+
+exit 0
+}
+
+INPUT_FILE_NAME="$1";shift;
+
+INPUT_FILE_NON_EXTENSION=$(echo $INPUT_FILE_NAME | ruby -F'\.' -anle 'puts $F[0]')
+INPUT_FILE_EXTENSION=$(echo $INPUT_FILE_NAME | ruby -F'\.' -anle 'puts $F[$F.size-1]')
+
+if [ ! $INPUT_FILE_EXTENSION == "mp4" ];then
+
+  usage
+
+fi
+
+if [ ! -f "$INPUT_FILE_NAME" ];then
+
+  usage
+
+fi
+
+MP4Box -dash 1000 -rap -frag-rap $INPUT_FILE_NAME
+cp $INPUT_FILE_NON_EXTENSION"_dash.mpd" $INPUT_FILE_NON_EXTENSION"_dash.xml"
+echo $INPUT_FILE_NON_EXTENSION"_dash.xml" | xml2json-ruby | jq '' >$INPUT_FILE_NON_EXTENSION"_dash.json"
+cat $INPUT_FILE_NON_EXTENSION"_dash.json" | jq '."MPD"."Period"."AdaptationSet"."Representation"."mimeType"'
+cat $INPUT_FILE_NON_EXTENSION"_dash.json" | jq '."MPD"."Period"."AdaptationSet"."Representation"."codecs"'
